@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>具身数据业务规划 — 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  --cyan: #00e5ff;
+  --cyan-dim: #00a5b8;
+  --cyan-glow: rgba(0, 229, 255, 0.15);
+  --amber: #ffab00;
+  --amber-dim: #c67f00;
+  --amber-glow: rgba(255, 171, 0, 0.12);
+  --bg-deep: #05080e;
+  --bg-card: rgba(10, 18, 32, 0.85);
+  --bg-card-hover: rgba(15, 28, 50, 0.9);
+  --border: rgba(0, 229, 255, 0.12);
+  --border-bright: rgba(0, 229, 255, 0.3);
+  --text: #e0e8f0;
+  --text-dim: #7a8ea6;
+  --text-bright: #ffffff;
+  --grid-color: rgba(0, 229, 255, 0.04);
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+  --font-body: 'Noto Sans SC', system-ui, sans-serif;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--cyan-dim) var(--bg-deep);
+}
+
+body {
+  background: var(--bg-deep);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* ─── GRID BACKGROUND ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(0deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,229,255,0.03), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── AUTH GATE ─── */
+#auth-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: var(--bg-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s, visibility 0.5s;
+}
+
+#auth-gate.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.auth-box {
+  text-align: center;
+  padding: 3rem;
+}
+
+.auth-icon {
+  color: var(--cyan);
+  margin-bottom: 1.5rem;
+  opacity: 0.7;
+}
+
+.auth-title {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--cyan);
+  letter-spacing: 0.4em;
+  margin-bottom: 0.5rem;
+}
+
+.auth-sub {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+}
+
+#auth-form {
+  display: flex;
+  gap: 0;
+  justify-content: center;
+}
+
+#auth-input {
+  background: rgba(0, 229, 255, 0.05);
+  border: 1px solid var(--border-bright);
+  border-right: none;
+  border-radius: 3px 0 0 3px;
+  color: var(--text-bright);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  padding: 0.8rem 1.2rem;
+  width: 260px;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  letter-spacing: 0.15em;
+}
+
+#auth-input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px var(--cyan-glow);
+}
+
+#auth-input::placeholder {
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+
+#auth-form button {
+  background: rgba(0, 229, 255, 0.1);
+  border: 1px solid var(--border-bright);
+  border-radius: 0 3px 3px 0;
+  color: var(--cyan);
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+}
+
+#auth-form button:hover {
+  background: rgba(0, 229, 255, 0.2);
+  color: var(--text-bright);
+}
+
+#auth-error {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #ff4444;
+  margin-top: 1rem;
+  height: 1.2rem;
+  letter-spacing: 0.05em;
+}
+
+#auth-gate.hidden ~ nav,
+#auth-gate.hidden ~ section,
+#auth-gate.hidden ~ .divider,
+#auth-gate.hidden ~ footer,
+#auth-gate.hidden ~ .big-quote { }
+
+body.locked {
+  overflow: hidden;
+}
+
+/* ─── SCANLINE OVERLAY ─── */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ─── NAVIGATION ─── */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 0 3rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(5, 8, 14, 0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s;
+}
+
+nav.scrolled {
+  background: rgba(5, 8, 14, 0.95);
+  border-bottom-color: var(--border-bright);
+}
+
+.nav-logo {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--cyan);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.nav-logo span { color: var(--text-dim); font-weight: 400; }
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 0.3s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--cyan);
+  transition: width 0.3s;
+}
+
+.nav-links a:hover { color: var(--cyan); }
+.nav-links a:hover::after { width: 100%; }
+
+@media (max-width: 900px) {
+  nav { padding: 0 1.5rem; }
+  .nav-links { display: none; }
+}
+
+/* ─── HERO ─── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+#particle-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--cyan);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  padding: 0.5rem 1.5rem;
+  border: 1px solid var(--border-bright);
+  border-radius: 2px;
+  margin-bottom: 2.5rem;
+  background: var(--cyan-glow);
+  opacity: 0;
+  animation: fadeUp 0.8s 0.3s forwards;
+}
+
+.hero h1 {
+  font-family: var(--font-body);
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--text-bright);
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 1s 0.5s forwards;
+}
+
+.hero h1 .accent {
+  background: linear-gradient(135deg, var(--cyan), var(--amber));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--text-dim);
+  letter-spacing: 0.2em;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.8s forwards;
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s 1.2s forwards;
+}
+
+.hero-scroll span {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--cyan), transparent);
+  animation: pulse-line 2s infinite;
+}
+
+@keyframes pulse-line {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── SECTIONS ─── */
+section {
+  position: relative;
+  z-index: 1;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 8rem 2rem;
+}
+
+@media (max-width: 768px) {
+  section { padding: 4rem 1.25rem; }
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--cyan);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-label::before {
+  content: '';
+  width: 30px;
+  height: 1px;
+  background: var(--cyan);
+}
+
+.section-title {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 900;
+  color: var(--text-bright);
+  line-height: 1.25;
+  margin-bottom: 3rem;
+  letter-spacing: -0.01em;
+}
+
+/* ─── REVEAL ANIMATIONS ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ─── ABOUT ─── */
+.about-intro {
+  font-size: 1.25rem;
+  color: var(--text);
+  font-weight: 300;
+  margin-bottom: 3rem;
+  max-width: 700px;
+  line-height: 2;
+}
+
+.about-intro strong {
+  color: var(--cyan);
+  font-weight: 500;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 2.5rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--cyan), var(--border), transparent);
+}
+
+.tl-item {
+  position: relative;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.tl-item:last-child { border-bottom: none; margin-bottom: 0; }
+
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -2.5rem;
+  top: 0.5rem;
+  width: 9px;
+  height: 9px;
+  background: var(--bg-deep);
+  border: 2px solid var(--cyan);
+  border-radius: 50%;
+}
+
+.tl-date {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--amber);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.25rem;
+}
+
+.tl-company {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 0.25rem;
+}
+
+.tl-desc {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+.edu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.edu-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.edu-card:hover {
+  border-color: var(--border-bright);
+  background: var(--bg-card-hover);
+}
+
+.edu-card .label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--amber);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.edu-card .school {
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 0.25rem;
+}
+
+.edu-card .degree {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+/* ─── METRICS STRIP ─── */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 3rem 0;
+}
+
+@media (max-width: 768px) {
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+}
+
+.metric {
+  background: var(--bg-card);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.metric:hover { background: var(--bg-card-hover); }
+
+.metric-value {
+  font-family: var(--font-mono);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: var(--cyan);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.metric-value .unit {
+  font-size: 0.5em;
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
+.metric-label {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+/* ─── DATA LOOP ─── */
+.loop-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 3rem 0;
+  padding: 2rem;
+}
+
+.loop-node {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text);
+  padding: 0.75rem 1.2rem;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  border-radius: 2px;
+  white-space: nowrap;
+  transition: all 0.3s;
+}
+
+.loop-node:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  box-shadow: 0 0 20px var(--cyan-glow);
+}
+
+.loop-arrow {
+  font-family: var(--font-mono);
+  color: var(--cyan-dim);
+  font-size: 1rem;
+  padding: 0 0.5rem;
+  animation: arrowPulse 2s infinite;
+}
+
+@keyframes arrowPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* ─── ARCHITECTURE PATHS ─── */
+.arch-paths {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+  .arch-paths { grid-template-columns: 1fr; }
+}
+
+.arch-path {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+
+.arch-path:hover { border-color: var(--border-bright); }
+
+.arch-path::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan), transparent);
+}
+
+.arch-path h3 {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--cyan);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.arch-path .flow {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 2;
+}
+
+.arch-path .flow .arrow {
+  color: var(--amber);
+  margin: 0 0.3rem;
+}
+
+/* ─── COMPARISON TABLE ─── */
+.comp-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin: 2rem 0;
+}
+
+.comp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  min-width: 800px;
+}
+
+.comp-table thead th {
+  background: rgba(0, 229, 255, 0.06);
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 1rem 1.2rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-bright);
+  white-space: nowrap;
+}
+
+.comp-table tbody td {
+  padding: 0.85rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  vertical-align: top;
+  line-height: 1.6;
+}
+
+.comp-table tbody tr:hover td {
+  background: rgba(0, 229, 255, 0.02);
+}
+
+.comp-table tbody td:first-child {
+  font-weight: 700;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.comp-table .highlight-cell {
+  color: var(--amber);
+  font-weight: 500;
+}
+
+.comp-table .callout-cell {
+  background: var(--amber-glow);
+  color: var(--amber);
+  font-weight: 700;
+  border-left: 2px solid var(--amber);
+}
+
+/* ─── PLAYER CARDS ─── */
+.player-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.player-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2rem;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.player-card:hover {
+  border-color: var(--border-bright);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+}
+
+.player-card.featured {
+  border-color: var(--amber-dim);
+  background: rgba(255, 171, 0, 0.03);
+}
+
+.player-card.featured::before {
+  content: '主要对标';
+  position: absolute;
+  top: -1px;
+  right: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--bg-deep);
+  background: var(--amber);
+  padding: 0.2rem 0.8rem;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+.player-type {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--cyan);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.player-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 1rem;
+}
+
+.player-traits {
+  list-style: none;
+  margin-bottom: 1rem;
+}
+
+.player-traits li {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  padding: 0.25rem 0;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.player-traits li::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  color: var(--cyan-dim);
+  font-family: var(--font-mono);
+}
+
+.player-meta {
+  display: flex;
+  gap: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+}
+
+.player-meta dt { color: var(--text-dim); }
+.player-meta dd { color: var(--text); font-weight: 500; }
+
+/* ─── TRIAD ─── */
+.triad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+@media (max-width: 900px) {
+  .triad { grid-template-columns: 1fr; }
+}
+
+.triad-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.triad-card:hover {
+  border-color: var(--border-bright);
+  transform: translateY(-2px);
+}
+
+.triad-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+}
+
+.triad-card:nth-child(1)::after { background: var(--cyan); }
+.triad-card:nth-child(2)::after { background: var(--amber); }
+.triad-card:nth-child(3)::after { background: linear-gradient(90deg, var(--cyan), var(--amber)); }
+
+.triad-icon {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--cyan);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.triad-card:nth-child(2) .triad-icon { color: var(--amber); }
+
+.triad-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
+}
+
+.triad-card .sub {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+}
+
+.triad-card ul {
+  list-style: none;
+}
+
+.triad-card li {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  padding: 0.3rem 0;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.triad-card li::before {
+  content: '//';
+  position: absolute;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--cyan-dim);
+}
+
+.triad-card:nth-child(2) li::before { color: var(--amber-dim); }
+
+/* ─── MISSION ─── */
+.mission-block {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+
+.mission-row {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s;
+}
+
+.mission-row:last-child { border-bottom: none; }
+.mission-row:hover { background: rgba(0,229,255,0.02); }
+
+.mission-row .m-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--cyan);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 1.5rem;
+  background: rgba(0,229,255,0.04);
+  display: flex;
+  align-items: flex-start;
+  border-right: 1px solid var(--border);
+}
+
+.mission-row .m-content {
+  padding: 1.5rem 2rem;
+  font-size: 1.05rem;
+  color: var(--text-bright);
+  font-weight: 500;
+}
+
+.mission-row .m-content ul {
+  list-style: none;
+  margin-top: 0.5rem;
+}
+
+.mission-row .m-content li {
+  padding: 0.3rem 0;
+  font-size: 0.9rem;
+  color: var(--text);
+  font-weight: 400;
+}
+
+.mission-row .m-content li strong {
+  color: var(--amber);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+@media (max-width: 600px) {
+  .mission-row { grid-template-columns: 1fr; }
+  .mission-row .m-label { border-right: none; border-bottom: 1px solid var(--border); }
+}
+
+/* ─── HARDWARE ─── */
+.hw-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+@media (max-width: 768px) {
+  .hw-grid { grid-template-columns: 1fr; }
+}
+
+.hw-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2rem;
+  transition: border-color 0.3s;
+}
+
+.hw-box:hover { border-color: var(--border-bright); }
+
+.hw-box h3 {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--cyan);
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+}
+
+.hw-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  margin: 0.2rem;
+  color: var(--text-dim);
+  transition: all 0.3s;
+}
+
+.hw-tag:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: var(--cyan-glow);
+}
+
+.hw-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.hw-flow-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.hw-flow-node {
+  font-size: 0.8rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.hw-flow-arrow {
+  font-family: var(--font-mono);
+  color: var(--amber-dim);
+  font-size: 0.8rem;
+}
+
+.data-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+@media (max-width: 600px) {
+  .data-compare { grid-template-columns: 1fr; }
+}
+
+.dc-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.dc-card:hover { border-color: var(--border-bright); }
+
+.dc-card h4 {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-bright);
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.dc-stat {
+  font-family: var(--font-mono);
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.dc-card:first-child .dc-stat { color: var(--cyan); }
+.dc-card:last-child .dc-stat { color: var(--amber); }
+
+.dc-meta {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+/* ─── SYSTEM ARCHITECTURE ─── */
+.sys-flow {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  margin: 2rem 0;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.sys-block {
+  flex: 1;
+  min-width: 220px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.sys-block:hover {
+  border-color: var(--border-bright);
+  background: var(--bg-card-hover);
+}
+
+.sys-block h4 {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--cyan);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.sys-block ul {
+  list-style: none;
+}
+
+.sys-block li {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  padding: 0.2rem 0;
+  padding-left: 0.8rem;
+  position: relative;
+}
+
+.sys-block li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 4px;
+  height: 4px;
+  background: var(--cyan-dim);
+  border-radius: 50%;
+}
+
+.sys-connector {
+  display: flex;
+  align-items: center;
+  color: var(--cyan-dim);
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  padding: 0 0.25rem;
+}
+
+/* ─── TEAM TABLE ─── */
+.team-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin: 2rem 0;
+}
+
+.team-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  min-width: 700px;
+}
+
+.team-table th {
+  background: rgba(0,229,255,0.06);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--cyan);
+  letter-spacing: 0.08em;
+  padding: 0.9rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-bright);
+  font-weight: 700;
+}
+
+.team-table th:first-child { text-align: left; }
+
+.team-table td {
+  padding: 0.75rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.team-table td:first-child {
+  text-align: left;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.team-table td:last-child {
+  color: var(--amber);
+  font-weight: 700;
+}
+
+.team-table tbody tr:hover td {
+  background: rgba(0,229,255,0.02);
+}
+
+/* ─── BUSINESS MODEL ─── */
+.biz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.biz-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  transition: all 0.3s;
+}
+
+.biz-card:hover {
+  border-color: var(--border-bright);
+  background: var(--bg-card-hover);
+}
+
+.biz-card .biz-type {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--cyan);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.biz-card h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 0.75rem;
+}
+
+.biz-card p {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+/* ─── ROADMAP ─── */
+.roadmap-timeline {
+  position: relative;
+  margin: 3rem 0;
+}
+
+.roadmap-line {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--border);
+  z-index: 0;
+}
+
+.roadmap-line-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--amber));
+  width: 0;
+  transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.roadmap-phases {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 900px) {
+  .roadmap-phases { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 500px) {
+  .roadmap-phases { grid-template-columns: 1fr; }
+}
+
+.rm-phase {
+  text-align: center;
+}
+
+.rm-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin: 0 auto 1.5rem;
+  position: relative;
+}
+
+.rm-dot::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid;
+  opacity: 0.3;
+}
+
+.rm-phase:nth-child(1) .rm-dot { background: #10b981; }
+.rm-phase:nth-child(1) .rm-dot::before { border-color: #10b981; }
+.rm-phase:nth-child(2) .rm-dot { background: var(--cyan); }
+.rm-phase:nth-child(2) .rm-dot::before { border-color: var(--cyan); }
+.rm-phase:nth-child(3) .rm-dot { background: var(--amber); }
+.rm-phase:nth-child(3) .rm-dot::before { border-color: var(--amber); }
+.rm-phase:nth-child(4) .rm-dot { background: #a855f7; }
+.rm-phase:nth-child(4) .rm-dot::before { border-color: #a855f7; }
+
+.rm-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  text-align: left;
+  transition: all 0.3s;
+}
+
+.rm-card:hover {
+  border-color: var(--border-bright);
+  transform: translateY(-2px);
+}
+
+.rm-card h3 {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 0.2rem;
+}
+
+.rm-card .rm-year {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+}
+
+.rm-card dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.3rem 0.75rem;
+  font-size: 0.75rem;
+}
+
+.rm-card dt {
+  font-family: var(--font-mono);
+  color: var(--cyan-dim);
+  font-weight: 500;
+}
+
+.rm-card dd {
+  color: var(--text-dim);
+}
+
+/* ─── BIG QUOTE ─── */
+.big-quote {
+  text-align: center;
+  padding: 6rem 2rem;
+  position: relative;
+}
+
+.big-quote::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 400px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.big-quote p {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  color: var(--text-bright);
+  position: relative;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.big-quote p .glow {
+  background: linear-gradient(135deg, var(--cyan), var(--amber));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 3rem 2rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+footer p {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+
+/* ─── DIVIDER ─── */
+.divider {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.divider-inner {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-bright), transparent);
+}
+</style>
+</head>
+<body>
+
+<!-- ─── PASSWORD GATE ─── -->
+<div id="auth-gate">
+  <div class="auth-box">
+    <div class="auth-icon">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+    </div>
+    <div class="auth-title">ACCESS REQUIRED</div>
+    <div class="auth-sub">请输入访问密码</div>
+    <form id="auth-form" onsubmit="return checkAuth()">
+      <input type="password" id="auth-input" placeholder="Password" autocomplete="off" autofocus>
+      <button type="submit">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </button>
+    </form>
+    <div id="auth-error"></div>
+  </div>
+</div>
+
+<div class="scanlines"></div>
+
+<!-- ─── NAV ─── -->
+<nav id="nav">
+  <div class="nav-logo">EMBODIED<span>.DATA</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#driver">驱动力</a></li>
+    <li><a href="#value">价值</a></li>
+    <li><a href="#players">行业</a></li>
+    <li><a href="#strategy">战略</a></li>
+    <li><a href="#positioning">定位</a></li>
+    <li><a href="#solution">方案</a></li>
+    <li><a href="#architecture">架构</a></li>
+    <li><a href="#team">团队</a></li>
+    <li><a href="#business">商业</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+  </ul>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <canvas id="particle-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-badge">Embodied Intelligence &middot; Data Infrastructure</div>
+    <h1><span class="accent">具身数据</span><br>业务规划</h1>
+    <p class="hero-sub">2026&mdash;05</p>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ─── ABOUT ─── -->
+<section id="about">
+  <div class="reveal">
+    <div class="section-label">01 // About Me</div>
+    <h2 class="section-title">一个专注数据、信仰AI的<br>技术型产品业务负责人</h2>
+  </div>
+
+  <div class="reveal reveal-delay-1">
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-date">2024 — 2026</div>
+        <div class="tl-company">理想汽车</div>
+        <div class="tl-desc">自动驾驶数据闭环负责人，支撑理想端到端、VLA两代智驾系统量产上车</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2009 — 2023</div>
+        <div class="tl-company">百度</div>
+        <div class="tl-desc">智驾地图业务总经理，将高精地图数据在规划智驾时代大规模商业化量产</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2007 — 2009</div>
+        <div class="tl-company">灵图</div>
+        <div class="tl-desc">地图数据价值启蒙，基于数据建模及图论算法实现A到B的路线规划服务</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal reveal-delay-2">
+    <div class="edu-grid">
+      <div class="edu-card">
+        <div class="label">EMBA 2023-2026</div>
+        <div class="school">中欧国际工商学院</div>
+        <div class="degree">工商管理EMBA学位</div>
+      </div>
+      <div class="edu-card">
+        <div class="label">本科 + 硕士 2000-2007</div>
+        <div class="school">华中科技大学</div>
+        <div class="degree">计算机本科硕士学位</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-inner"></div></div>
+
+<!-- ─── DATA LOOP ─── -->
+<section id="driver">
+  <div class="reveal">
+    <div class="section-label">02 // Core Driver</div>
+    <h2 class="section-title">数据闭环是自动驾驶<br>快速突破的本质驱动力</h2>
+  </div>
+
+  <div class="reveal reveal-delay-1">
+    <div class="arch-paths">
+      <div class="arch-path">
+        <h3>端到端 + VLM</h3>
+        <div class="flow">
+          导航 <span class="arrow">&rarr;</span> One Model 规控端 <span class="arrow">&rarr;</span> 轨迹<br>
+          传感器 <span class="arrow">&rarr;</span> VLM 视觉-语言大模型
+        </div>
+      </div>
+      <div class="arch-path">
+        <h3>VLA</h3>
+        <div class="flow">
+          导航 + 传感器 <span class="arrow">&rarr;</span> VLA 视觉-语言-行为大模型 <span class="arrow">&rarr;</span> 轨迹
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal reveal-delay-2">
+    <div class="loop-visual">
+      <div class="loop-node">Shadow Mode Validation</div>
+      <div class="loop-arrow">&rarr;</div>
+      <div class="loop-node">Data Trigger</div>
+      <div class="loop-arrow">&rarr;</div>
+      <div class="loop-node">Data Mining</div>
+      <div class="loop-arrow">&rarr;</div>
+      <div class="loop-node">Valid Samples</div>
+      <div class="loop-arrow">&rarr;</div>
+      <div class="loop-node">Auto Labeling</div>
+      <div class="loop-arrow">&rarr;</div>
+      <div class="loop-node">Training Dataset</div>
+      <div class="loop-arrow">&rarr;</div>
+      <div class="loop-node">Model Training</div>
+      <div class="loop-arrow">&circlearrowright;</div>
+    </div>
+  </div>
+
+  <div class="reveal reveal-delay-3">
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-value"><span data-count="1.5">0</span>B+ <span class="unit">km</span></div>
+        <div class="metric-label">车辆采集数据</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value"><span data-count="10">0</span>B+ <span class="unit">frames</span></div>
+        <div class="metric-label">周期训练数据</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value"><span data-count="200">0</span>+ <span class="unit">triggers</span></div>
+        <div class="metric-label">15-45s clips</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value"><span data-count="1">0</span> <span class="unit">min</span></div>
+        <div class="metric-label">数据反馈速度</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-inner"></div></div>
+
+<!-- ─── VALUE ─── -->
+<section id="value">
+  <div class="reveal">
+    <div class="section-label">03 // Market Value</div>
+    <h2 class="section-title">具身智能时代到来<br>具身数据将更具价值</h2>
+  </div>
+
+  <div class="reveal reveal-delay-1">
+    <div class="comp-table-wrap">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>维度</th>
+            <th>大语言模型</th>
+            <th>自动驾驶</th>
+            <th>具身智能</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>模型方案</td>
+            <td>路线收敛</td>
+            <td>路线基本收敛</td>
+            <td class="highlight-cell">路线尚未收敛，需求空间大</td>
+          </tr>
+          <tr>
+            <td>数据来源</td>
+            <td>互联网</td>
+            <td>主机厂主导</td>
+            <td class="highlight-cell">场景多样未数据化，供给潜力大</td>
+          </tr>
+          <tr>
+            <td>数据类型</td>
+            <td>海量文本、图片等</td>
+            <td>视觉、雷达等传感器</td>
+            <td class="highlight-cell">视觉、语言、触觉、力觉等多模态</td>
+          </tr>
+          <tr>
+            <td>数据规模</td>
+            <td>万亿 tokens</td>
+            <td>~一亿 clips</td>
+            <td class="highlight-cell">一亿小时，约100倍于自动驾驶</td>
+          </tr>
+          <tr>
+            <td>采集方式</td>
+            <td>开放抓取</td>
+            <td>用户车回传</td>
+            <td class="highlight-cell">从本体遥操到人类Ego视角</td>
+          </tr>
+          <tr>
+            <td>标注方法</td>
+            <td>AI标注+人工</td>
+            <td>AI标注+人工</td>
+            <td class="highlight-cell">多感态、维度复杂、跨本体迁移</td>
+          </tr>
+          <tr>
+            <td>代表公司</td>
+            <td>Scale AI、Surge AI<br><span style="color:var(--text-dim);font-size:0.75rem;">市值百亿美金级</span></td>
+            <td>数据堂、奥睿等<br><span style="color:var(--text-dim);font-size:0.75rem;">市值百亿人民币级</span></td>
+            <td class="callout-cell">有三方中立数据提供商机会<br>市值预计至少千亿人民币级</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-inner"></div></div>
+
+<!-- ─── PLAYERS ─── -->
+<section id="players">
+  <div class="reveal">
+    <div class="section-label">04 // Competitive Landscape</div>
+    <h2 class="section-title">当前行业玩家主要分三类<br>场景切入派是主要对标</h2>
+  </div>
+
+  <div class="reveal reveal-delay-1">
+    <div class="player-grid">
+      <div class="player-card">
+        <div class="player-type">独立数据公司</div>
+        <div class="player-name">光轮智能 / 鹏明机器人 / 简智机器人</div>
+        <ul class="player-traits">
+          <li>合成数据投入早，有一定规模</li>
+          <li>国际客户订单</li>
+          <li>核心投入在硬件迭代，卖设备+服务</li>
+          <li>具备一定可迁移数据治理能力</li>
+          <li>工程化落地能力强</li>
+        </ul>
+        <div class="player-meta">
+          <div><dt>客户</dt><dd>NVIDIA、Generalist 等</dd></div>
+          <div><dt>劣势</dt><dd>规模小、资源受限</dd></div>
+        </div>
+      </div>
+
+      <div class="player-card">
+        <div class="player-type">模型切入</div>
+        <div class="player-name">觅峰科技</div>
+        <ul class="player-traits">
+          <li>和模型绑定，快速闭环验证</li>
+          <li>早期资源比较多</li>
+        </ul>
+        <div class="player-meta">
+          <div><dt>客户</dt><dd>智元、字节、海外大厂</dd></div>
+          <div><dt>劣势</dt><dd>模型公司孵化，不中立</dd></div>
+        </div>
+      </div>
+
+      <div class="player-card featured">
+        <div class="player-type">场景切入派</div>
+        <div class="player-name">京东云</div>
+        <ul class="player-traits">
+          <li>场景-数据-模型-本体全链路布局</li>
+          <li>数采广，大手笔投入</li>
+          <li>下行能力强，平台型打法</li>
+        </ul>
+        <div class="player-meta">
+          <div><dt>客户</dt><dd>众擎、智元、千寻等</dd></div>
+          <div><dt>劣势</dt><dd>自研模型参与市场，不够中立</dd></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-inner"></div></div>
+
+<!-- ─── STRATEGY ─── -->
+<section id="strategy">
+  <div class="reveal">
+    <div class="section-label">05 // Strategy</div>
+    <h2 class="section-title">快速打通"场景-数据-模型"<br>正向迭代闭环是制胜关键</h2>
+  </div>
+
+  <div class="reveal reveal-delay-1">
+    <div class="triad">
+      <div class="triad-card">
+        <div class="triad-icon">场景</div>
+        <h3>场景</h3>
+        <div class="sub">集团资源</div>
+        <ul>
+          <li>场景理解与定义</li>
+          <li>数采运营与管理</li>
+          <li>自有场景数采</li>
+          <li>政企合作场景</li>
+          <li>合作场景数采</li>
+        </ul>
+      </div>
+      <div class="triad-card">
+        <div class="triad-icon">数据</div>
+        <h3>数据</h3>
+        <div class="sub">自建新团队</div>
+        <ul>
+          <li>数据采集 / 数采设备</li>
+          <li>数据合规</li>
+          <li>数据处理 / 云端大模型</li>
+          <li>仿真与合成 / 世界模型</li>
+          <li>数据集产品</li>
+        </ul>
+      </div>
+      <div class="triad-card">
+        <div class="triad-icon">模型</div>
+        <h3>模型</h3>
+        <div class="sub">被投X公司</div>
+        <ul>
+          <li>模型评测体系定义</li>
+          <li>研发迭代与管理</li>
+          <li>需求 &rarr; 交付</li>
+          <li>部署 &rarr; 验证</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-inner"></div></div>
+
+<!-- ─── POSITIONING ─── -->
+<section id="positioning">
+  <div class="reveal">
+    <div class="section-label">06 // Positioning</div>
+    <h2 class="section-title">定位：成为全球最大的<br>具身数据基础设施</h2>
+  </div>
+
+  <div class="reveal reveal-delay-1">
+    <div class="mission-block">
+      <div class="mission-row">
+        <div class="m-label">使命</div>
+        <div class="m-content">以数据驱动实现物理AGI</div>
+      </div>
+      <div class="mission-row">
+        <div class="m-label">愿景</div>
+        <div class="m-content">2030年，成为全球最大的具身数据基础设施</div>
+      </div>
+      <div class="mission-row">
+        <div class="m-label">战略目标</div>
+        <div class="m-content">
+          分解三大核心目标：
+          <ul>
+            <li><strong>【商业】</strong> 三年订单份额第一、五年收入份额第一</li>
+            <li><strong>【产品】</strong> 高质量数据三年千万小时、五年上亿小时</li>
+            <li><strong>【技术】</strong> 引领全球最领先的具身数据驱动技术范式</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── BIG QUOTE ─── -->
+<div class="big-quote reveal">
+  <p>以数据驱动<br>实现<span class="glow">物理AGI</span></p>
+</div>
+
+<div class="divider"><div class="divider-inner"></div></div>
+
+<!-- ─── SOLUTION ─── -->
+<section id="solution">
+  <div class="reveal">
+    <div class="section-label">07 // Solution Design</div>
+    <h2 class="section-title">方案选型：数采硬件和<br>数据集产品的完整性方案</h2>
+  </div>
+
+  <div class="reveal reveal-delay-1">
+    <div class="hw-grid">
+      <div class="hw-box">
+        <h3>数据采集设备</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:0.3rem;">
+          <span class="hw-tag">Ego 第一视角</span>
+          <span class="hw-tag">UMI / 手套</span>
+          <span class="hw-tag">肌电手环</span>
+          <span class="hw-tag">皮肤传感器</span>
+          <span class="hw-tag">全身动捕</span>
+          <span class="hw-tag">定位/深度传感器</span>
+          <span class="hw-tag">RGB 第三视角</span>
+        </div>
+      </div>
+      <div class="hw-box">
+        <h3>数据价值链</h3>
+        <div class="hw-flow">
+          <div class="hw-flow-row">
+            <span class="hw-flow-node">World Modeling</span>
+            <span class="hw-flow-arrow">&rarr;</span>
+            <span class="hw-flow-node">Simulating</span>
+            <span class="hw-flow-arrow">&rarr;</span>
+            <span class="hw-flow-node" style="color:var(--cyan);">Ego-Centric Video Data</span>
+          </div>
+          <div class="hw-flow-row">
+            <span class="hw-flow-node">Action Fine-Tuning</span>
+            <span class="hw-flow-arrow">&rarr;</span>
+            <span class="hw-flow-node">Aligning</span>
+            <span class="hw-flow-arrow">&rarr;</span>
+            <span class="hw-flow-node" style="color:var(--cyan);">Wearable Sensorized Data</span>
+          </div>
+          <div class="hw-flow-row">
+            <span class="hw-flow-node">Physical RL</span>
+            <span class="hw-flow-arrow">&rarr;</span>
+            <span class="hw-flow-node">Surpassing</span>
+            <span class="hw-flow-arrow">&rarr;</span>
+            <span class="hw-flow-node" style="color:var(--cyan);">Teleop Data</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal reveal-delay-2">
+    <div class="data-compare">
+      <div class="dc-card">
+        <h4>无本体数据</h4>
+        <div class="dc-stat">一亿小时</div>
+        <div class="dc-meta">对应千万小时 &middot; 成本：低</div>
+      </div>
+      <div class="dc-card">
+        <h4>本体遥操数据</h4>
+        <div class="dc-stat">百万小时</div>
+        <div class="dc-meta">高精度 &middot; 成本：高</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-inner"></div></div>
+
+<!-- ─── ARCHITECTURE ─── -->
+<section id="architecture">
+  <div class="reveal">
+    <div class="section-label">08 // System Architecture</div>
+    <h2 class="section-title">Real2Sim2Real 架构设计</h2>
+  </div>
+
+  <div class="reveal reveal-delay-1">
+    <div class="sys-flow">
+      <div class="sys-block">
+        <h4>Real 数据采集</h4>
+        <ul>
+          <li>采集系统 / 任务管理</li>
+          <li>传感器融合处理及压缩</li>
+          <li>操作系统 / 硬件系统</li>
+          <li>自动标注平台</li>
+          <li>VLA标注 / 目标标注 / 行为标注</li>
+          <li>样本管理 / 任务分配</li>
+          <li>大模型与训练平台</li>
+          <li>场景理解 / 并行训练 / VLM</li>
+        </ul>
+      </div>
+      <div class="sys-connector">&rarr;</div>
+      <div class="sys-block">
+        <h4>数据平台</h4>
+        <ul>
+          <li>数据管线</li>
+          <li>数据质量评测</li>
+        </ul>
+      </div>
+      <div class="sys-connector">&rarr;</div>
+      <div class="sys-block">
+        <h4>模型训练</h4>
+        <ul>
+          <li>VLA</li>
+          <li>WAM</li>
+          <li>模型公司协同</li>
+        </ul>
+      </div>
+      <div class="sys-connector">&harr;</div>
+      <div class="sys-block">
+        <h4>Sim 仿真平台</h4>
+        <ul>
+          <li>世界模型</li>
+          <li>重建 / 生成</li>
+          <li>数据合成</li>
+          <li>资产 / 场景</li>
+          <li>物理逻辑</li>
+        </ul>
+      </div>
+      <div class="sys-connector">&rarr;</div>
+      <div class="sys-block" style="flex:0.5;min-width:120px;">
+        <h4>Real 应用</h4>
+        <ul>
+          <li>部署</li>
+          <li>验证</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-inner"></div></div>
+
+<!-- ─── TEAM ─── -->
+<section id="team">
+  <div class="reveal">
+    <div class="section-label">09 // Team</div>
+    <h2 class="section-title">团队配置</h2>
+  </div>
+
+  <div class="reveal reveal-delay-1">
+    <div class="team-table-wrap">
+      <table class="team-table">
+        <thead>
+          <tr>
+            <th>时间</th>
+            <th>预研</th>
+            <th>算法</th>
+            <th>工程</th>
+            <th>硬件</th>
+            <th>产品</th>
+            <th>商务</th>
+            <th>GR</th>
+            <th>总计</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>7月启动</td><td>2</td><td>2</td><td>2</td><td>1</td><td>2</td><td>1</td><td>1</td><td>10+</td></tr>
+          <tr><td>2026</td><td>5</td><td>12</td><td>10</td><td>10</td><td>5</td><td>5</td><td>3</td><td>50</td></tr>
+          <tr><td>2027</td><td>10</td><td>30</td><td>30</td><td>30</td><td>20</td><td>20</td><td>10</td><td>150</td></tr>
+          <tr><td>2028</td><td>20</td><td>60</td><td>60</td><td>60</td><td>40</td><td>40</td><td>20</td><td>300</td></tr>
+          <tr><td>2029</td><td>30</td><td>80</td><td>80</td><td>80</td><td>50</td><td>60</td><td>20</td><td>400</td></tr>
+          <tr><td>2030</td><td>40</td><td>100</td><td>100</td><td>80</td><td>60</td><td>100</td><td>20</td><td>500</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-inner"></div></div>
+
+<!-- ─── BUSINESS ─── -->
+<section id="business">
+  <div class="reveal">
+    <div class="section-label">10 // Business Model</div>
+    <h2 class="section-title">商业模式</h2>
+  </div>
+
+  <div class="reveal reveal-delay-1">
+    <div class="biz-grid">
+      <div class="biz-card">
+        <div class="biz-type">2B &middot; 国内</div>
+        <h4>数据交易</h4>
+        <p>销售数据使用权，可重复销售。主打标品，接受客户定制。定价按元/小时，定制+标品模式。</p>
+      </div>
+      <div class="biz-card">
+        <div class="biz-type">2G &middot; 国内</div>
+        <h4>方案总包</h4>
+        <p>项目制方式，总包合同。可向政府采购，标品可能复用。政府数采基地接受订单，专项数采或集采。</p>
+      </div>
+      <div class="biz-card">
+        <div class="biz-type">2A &middot; 国内</div>
+        <h4>硬件销售</h4>
+        <p>销售2B硬件+售后服务。联合实验室开展数据联合开发，论文、专利输出。</p>
+      </div>
+      <div class="biz-card">
+        <div class="biz-type">2B/2A &middot; 海外</div>
+        <h4>总体模式</h4>
+        <p>考虑数据合规，海外数据生产和销售采用自产自销模式。主要由海外分公司运营，国内支持平台持续支持。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal reveal-delay-2">
+    <div class="biz-grid">
+      <div class="biz-card">
+        <div class="biz-type">供应端</div>
+        <h4>自有体系</h4>
+        <p>人员提供数采补充，配套服务。58承担补充人力。服务公司约定成本转移或利润分成。</p>
+      </div>
+      <div class="biz-card">
+        <div class="biz-type">供应端</div>
+        <h4>政府数采基地</h4>
+        <p>接受订单，专项数采或集采。流程集中走完方可。</p>
+      </div>
+      <div class="biz-card">
+        <div class="biz-type">供应端</div>
+        <h4>联合实验室</h4>
+        <p>合作开展数据联合开发。论文、专利输出。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-inner"></div></div>
+
+<!-- ─── ROADMAP ─── -->
+<section id="roadmap">
+  <div class="reveal">
+    <div class="section-label">11 // Roadmap</div>
+    <h2 class="section-title">Roadmap</h2>
+  </div>
+
+  <div class="reveal reveal-delay-1">
+    <div class="roadmap-timeline">
+      <div class="roadmap-line"><div class="roadmap-line-fill" id="rm-fill"></div></div>
+      <div class="roadmap-phases">
+        <div class="rm-phase">
+          <div class="rm-dot"></div>
+          <div class="rm-card">
+            <h3>PMF</h3>
+            <div class="rm-year">&rarr; 2026.12</div>
+            <dl>
+              <dt>产品</dt><dd>基于X硬件打通全流程，发布数据集产品，聚焦家庭场景</dd>
+              <dt>客户</dt><dd>标杆客户 X</dd>
+              <dt>订单</dt><dd>1亿</dd>
+              <dt>费用</dt><dd>5000万</dd>
+              <dt>团队</dt><dd>50人</dd>
+            </dl>
+          </div>
+        </div>
+        <div class="rm-phase">
+          <div class="rm-dot"></div>
+          <div class="rm-card">
+            <h3>Scale</h3>
+            <div class="rm-year">&rarr; 2027</div>
+            <dl>
+              <dt>产品</dt><dd>发布自研数采硬件，数据集百万小时，拓展多场景</dd>
+              <dt>客户</dt><dd>3-5家</dd>
+              <dt>订单</dt><dd>5亿</dd>
+              <dt>收入</dt><dd>2-3亿</dd>
+              <dt>团队</dt><dd>150人</dd>
+            </dl>
+          </div>
+        </div>
+        <div class="rm-phase">
+          <div class="rm-dot"></div>
+          <div class="rm-card">
+            <h3>Breakeven</h3>
+            <div class="rm-year">&rarr; 2028</div>
+            <dl>
+              <dt>产品</dt><dd>换代数采硬件，数据集千万小时，覆盖多数场景</dd>
+              <dt>客户</dt><dd>20家以上</dd>
+              <dt>收入</dt><dd>15亿</dd>
+              <dt>利润</dt><dd>1亿</dd>
+              <dt>团队</dt><dd>300人</dd>
+            </dl>
+          </div>
+        </div>
+        <div class="rm-phase">
+          <div class="rm-dot"></div>
+          <div class="rm-card">
+            <h3>Profit</h3>
+            <div class="rm-year">&rarr; 2030</div>
+            <dl>
+              <dt>产品</dt><dd>全球数据规模第一，数据集上亿小时，全场景覆盖</dd>
+              <dt>客户</dt><dd>50家以上</dd>
+              <dt>收入</dt><dd>100亿</dd>
+              <dt>利润</dt><dd>35亿 (35%)</dd>
+              <dt>团队</dt><dd>500人</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <p>具身数据业务规划 V3 &mdash; 2026</p>
+</footer>
+
+<script>
+/* ─── AUTH ─── */
+const PASS_HASH = 'dc091e2936acae646078be694deac4d22a533e19cdd67be2efa6d812fcc41184';
+
+async function sha256(text) {
+  const data = new TextEncoder().encode(text);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function checkAuth() {
+  const input = document.getElementById('auth-input').value;
+  const hash = await sha256(input);
+  if (hash === PASS_HASH) {
+    document.getElementById('auth-gate').classList.add('hidden');
+    document.body.classList.remove('locked');
+    sessionStorage.setItem('authed', '1');
+    return false;
+  }
+  document.getElementById('auth-error').textContent = 'ACCESS DENIED — 密码错误';
+  document.getElementById('auth-input').value = '';
+  document.getElementById('auth-input').focus();
+  return false;
+}
+
+(function() {
+  if (sessionStorage.getItem('authed') === '1') {
+    document.getElementById('auth-gate').classList.add('hidden');
+  } else {
+    document.body.classList.add('locked');
+  }
+})();
+
+/* ─── PARTICLE FIELD ─── */
+(function() {
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let w, h;
+  let mouse = { x: -1000, y: -1000 };
+
+  function resize() {
+    w = canvas.width = canvas.offsetWidth;
+    h = canvas.height = canvas.offsetHeight;
+  }
+
+  function init() {
+    resize();
+    particles = [];
+    const count = Math.min(Math.floor((w * h) / 8000), 150);
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        r: Math.random() * 1.5 + 0.5,
+        alpha: Math.random() * 0.5 + 0.1
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if (p.x < 0) p.x = w;
+      if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h;
+      if (p.y > h) p.y = 0;
+
+      /* mouse repel */
+      const dx = p.x - mouse.x;
+      const dy = p.y - mouse.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 150) {
+        p.x += dx * 0.01;
+        p.y += dy * 0.01;
+      }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0, 229, 255, ${p.alpha})`;
+      ctx.fill();
+
+      /* connect nearby */
+      for (let j = i + 1; j < particles.length; j++) {
+        const p2 = particles[j];
+        const dx2 = p.x - p2.x;
+        const dy2 = p.y - p2.y;
+        const d = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+        if (d < 120) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.strokeStyle = `rgba(0, 229, 255, ${0.08 * (1 - d / 120)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    mouse.x = -1000;
+    mouse.y = -1000;
+  });
+
+  window.addEventListener('resize', () => { resize(); });
+  init();
+  draw();
+})();
+
+/* ─── SCROLL REVEAL ─── */
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+reveals.forEach(el => observer.observe(el));
+
+/* ─── NAV SCROLL ─── */
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+/* ─── COUNTER ANIMATION ─── */
+const counters = document.querySelectorAll('[data-count]');
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const target = parseFloat(el.dataset.count);
+      const isFloat = target % 1 !== 0;
+      const duration = 1500;
+      const start = performance.now();
+
+      function tick(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = target * eased;
+        el.textContent = isFloat ? current.toFixed(1) : Math.floor(current);
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+
+      requestAnimationFrame(tick);
+      counterObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+
+counters.forEach(el => counterObserver.observe(el));
+
+/* ─── ROADMAP LINE FILL ─── */
+const rmFill = document.getElementById('rm-fill');
+const rmObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      rmFill.style.width = '100%';
+      rmObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.2 });
+
+rmObserver.observe(document.querySelector('.roadmap-timeline'));
+</script>
+
+</body>
+</html>
