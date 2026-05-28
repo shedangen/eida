@@ -176,6 +176,25 @@ body.locked {
   overflow: hidden;
 }
 
+/* ─── ORIGINAL SLIDE IMAGE ─── */
+.slide-original {
+  margin: 2.5rem 0;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 30px rgba(0, 229, 255, 0.06);
+  transition: border-color 0.3s;
+}
+
+.slide-original:hover {
+  border-color: var(--border-bright);
+}
+
+.slide-original img {
+  width: 100%;
+  display: block;
+}
+
 /* ─── SCANLINE OVERLAY ─── */
 .scanlines {
   position: fixed;
@@ -1476,9 +1495,8 @@ footer p {
     <li><a href="#driver">驱动力</a></li>
     <li><a href="#value">价值</a></li>
     <li><a href="#players">行业</a></li>
-    <li><a href="#strategy">战略</a></li>
     <li><a href="#positioning">定位</a></li>
-    <li><a href="#solution">方案</a></li>
+    <li><a href="#strategy">打法</a></li>
     <li><a href="#architecture">架构</a></li>
     <li><a href="#team">团队</a></li>
     <li><a href="#business">商业</a></li>
@@ -1553,6 +1571,12 @@ footer p {
   </div>
 
   <div class="reveal reveal-delay-1">
+    <div class="slide-original">
+      <img src="images/v3_slide_3.png" alt="数据闭环架构图">
+    </div>
+  </div>
+
+  <div class="reveal reveal-delay-2">
     <div class="arch-paths">
       <div class="arch-path">
         <h3>端到端 + VLM</h3>
@@ -1625,54 +1649,34 @@ footer p {
       <table class="comp-table">
         <thead>
           <tr>
-            <th>维度</th>
-            <th>大语言模型</th>
-            <th>自动驾驶</th>
-            <th>具身智能</th>
+            <th>AI时代</th>
+            <th>模型</th>
+            <th>场景</th>
+            <th>数据</th>
+            <th>机会总结</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>模型方案</td>
-            <td>路线收敛</td>
-            <td>路线基本收敛</td>
-            <td class="highlight-cell">路线尚未收敛，需求空间大</td>
+            <td>自动驾驶</td>
+            <td>技术路线收敛</td>
+            <td>主机厂主导，数据封闭<br>视觉、点云等模态<br>规模约一亿clips，合计100万小时规模</td>
+            <td>来自互联网，开放<br>文本、图6、视频多模态<br>规模约万亿tokens规模</td>
+            <td>数据公司沦为低端外包标注公司，市值约百亿人民币级，代表公司数据堂、奥睿、曼孚等</td>
           </tr>
           <tr>
-            <td>数据来源</td>
-            <td>互联网</td>
-            <td>主机厂主导</td>
-            <td class="highlight-cell">场景多样未数据化，供给潜力大</td>
+            <td>大语言模型</td>
+            <td>技术路线基本收敛</td>
+            <td>场景集中，语言、代码等</td>
+            <td>来自互联网，开放<br>文本、图6、视频多模态<br>规模约万亿tokens规模</td>
+            <td>通过深度挖掘数据提供价值，市值数百亿美金，代表公司 Scale AI、Surge AI 等</td>
           </tr>
           <tr>
-            <td>数据类型</td>
-            <td>海量文本、图片等</td>
-            <td>视觉、雷达等传感器</td>
-            <td class="highlight-cell">视觉、语言、触觉、力觉等多模态</td>
-          </tr>
-          <tr>
-            <td>数据规模</td>
-            <td>万亿 tokens</td>
-            <td>~一亿 clips</td>
-            <td class="highlight-cell">一亿小时，约100倍于自动驾驶</td>
-          </tr>
-          <tr>
-            <td>采集方式</td>
-            <td>开放抓取</td>
-            <td>用户车回传</td>
-            <td class="highlight-cell">从本体遥操到人类Ego视角</td>
-          </tr>
-          <tr>
-            <td>标注方法</td>
-            <td>AI标注+人工</td>
-            <td>AI标注+人工</td>
-            <td class="highlight-cell">多感态、维度复杂、跨本体迁移</td>
-          </tr>
-          <tr>
-            <td>代表公司</td>
-            <td>Scale AI、Surge AI<br><span style="color:var(--text-dim);font-size:0.75rem;">市值百亿美金级</span></td>
-            <td>数据堂、奥睿等<br><span style="color:var(--text-dim);font-size:0.75rem;">市值百亿人民币级</span></td>
-            <td class="callout-cell">有三方中立数据提供商机会<br>市值预计至少千亿人民币级</td>
+            <td style="font-weight:700;color:var(--amber);">具身智能</td>
+            <td class="highlight-cell">技术路线还未收敛</td>
+            <td class="highlight-cell">场景分散、服务场景众多</td>
+            <td class="highlight-cell">来自人类物理交互采集<br>视觉、语言、触觉、力觉<br>等复杂多模态<br>规模预计一亿小时，100倍于自动驾驶</td>
+            <td class="callout-cell">数据价值极高，有三方的中立数据提供商机会，市值预计数千亿人民币级</td>
           </tr>
         </tbody>
       </table>
@@ -1739,60 +1743,10 @@ footer p {
 
 <div class="divider"><div class="divider-inner"></div></div>
 
-<!-- ─── STRATEGY ─── -->
-<section id="strategy">
-  <div class="reveal">
-    <div class="section-label">05 // Strategy</div>
-    <h2 class="section-title">快速打通"场景-数据-模型"<br>正向迭代闭环是制胜关键</h2>
-  </div>
-
-  <div class="reveal reveal-delay-1">
-    <div class="triad">
-      <div class="triad-card">
-        <div class="triad-icon">场景</div>
-        <h3>场景</h3>
-        <div class="sub">集团资源</div>
-        <ul>
-          <li>场景理解与定义</li>
-          <li>数采运营与管理</li>
-          <li>自有场景数采</li>
-          <li>政企合作场景</li>
-          <li>合作场景数采</li>
-        </ul>
-      </div>
-      <div class="triad-card">
-        <div class="triad-icon">数据</div>
-        <h3>数据</h3>
-        <div class="sub">自建新团队</div>
-        <ul>
-          <li>数据采集 / 数采设备</li>
-          <li>数据合规</li>
-          <li>数据处理 / 云端大模型</li>
-          <li>仿真与合成 / 世界模型</li>
-          <li>数据集产品</li>
-        </ul>
-      </div>
-      <div class="triad-card">
-        <div class="triad-icon">模型</div>
-        <h3>模型</h3>
-        <div class="sub">被投X公司</div>
-        <ul>
-          <li>模型评测体系定义</li>
-          <li>研发迭代与管理</li>
-          <li>需求 &rarr; 交付</li>
-          <li>部署 &rarr; 验证</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"><div class="divider-inner"></div></div>
-
 <!-- ─── POSITIONING ─── -->
 <section id="positioning">
   <div class="reveal">
-    <div class="section-label">06 // Positioning</div>
+    <div class="section-label">05 // Positioning</div>
     <h2 class="section-title">定位：成为全球最大的<br>具身数据基础设施</h2>
   </div>
 
@@ -1828,14 +1782,56 @@ footer p {
 
 <div class="divider"><div class="divider-inner"></div></div>
 
-<!-- ─── SOLUTION ─── -->
-<section id="solution">
+<!-- ─── STRATEGY (打法) ─── -->
+<section id="strategy">
   <div class="reveal">
-    <div class="section-label">07 // Solution Design</div>
-    <h2 class="section-title">方案选型：数采硬件和<br>数据集产品的完整性方案</h2>
+    <div class="section-label">06 // Strategy & Solution</div>
+    <h2 class="section-title">打法：快速打通"场景-数据-模型"<br>正向迭代闭环</h2>
   </div>
 
   <div class="reveal reveal-delay-1">
+    <div class="slide-original">
+      <img src="images/v3_slide_7.png" alt="打法：场景-数据-模型正向迭代闭环">
+    </div>
+  </div>
+
+  <div class="reveal reveal-delay-2">
+    <div class="triad">
+      <div class="triad-card">
+        <div class="triad-icon">场景</div>
+        <h3>场景</h3>
+        <div class="sub">集团资源</div>
+        <ul>
+          <li>场景理解与定义</li>
+          <li>数采运营与管理</li>
+          <li>自有场景 / 政企合作 / 合作场景数采</li>
+        </ul>
+      </div>
+      <div class="triad-card">
+        <div class="triad-icon">数据</div>
+        <h3>数据</h3>
+        <div class="sub">自建新团队</div>
+        <ul>
+          <li>数据采集 / 数采设备 / 数据合规</li>
+          <li>数据处理 / 云端大模型</li>
+          <li>仿真与合成 / 世界模型</li>
+          <li>数据集产品</li>
+        </ul>
+      </div>
+      <div class="triad-card">
+        <div class="triad-icon">模型</div>
+        <h3>模型</h3>
+        <div class="sub">被投X公司</div>
+        <ul>
+          <li>模型评测体系定义</li>
+          <li>研发迭代与管理</li>
+          <li>需求 &rarr; 交付 &rarr; 部署 &rarr; 验证</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal reveal-delay-3">
     <div class="hw-grid">
       <div class="hw-box">
         <h3>数据采集设备</h3>
@@ -1878,15 +1874,15 @@ footer p {
     </div>
   </div>
 
-  <div class="reveal reveal-delay-2">
+  <div class="reveal reveal-delay-4">
     <div class="data-compare">
       <div class="dc-card">
-        <h4>无本体数据</h4>
+        <h4>Ego视频数据</h4>
         <div class="dc-stat">一亿小时</div>
-        <div class="dc-meta">对应千万小时 &middot; 成本：低</div>
+        <div class="dc-meta">动作数据 &middot; 成本：低</div>
       </div>
       <div class="dc-card">
-        <h4>本体遥操数据</h4>
+        <h4>遥操数据</h4>
         <div class="dc-stat">百万小时</div>
         <div class="dc-meta">高精度 &middot; 成本：高</div>
       </div>
@@ -1899,11 +1895,17 @@ footer p {
 <!-- ─── ARCHITECTURE ─── -->
 <section id="architecture">
   <div class="reveal">
-    <div class="section-label">08 // System Architecture</div>
-    <h2 class="section-title">Real2Sim2Real 架构设计</h2>
+    <div class="section-label">07 // System Architecture</div>
+    <h2 class="section-title">系统架构：Real2Sim2Real 架构设计</h2>
   </div>
 
   <div class="reveal reveal-delay-1">
+    <div class="slide-original">
+      <img src="images/v3_slide_8.png" alt="Real2Sim2Real系统架构">
+    </div>
+  </div>
+
+  <div class="reveal reveal-delay-2">
     <div class="sys-flow">
       <div class="sys-block">
         <h4>Real 数据采集</h4>
@@ -1963,7 +1965,7 @@ footer p {
 <!-- ─── TEAM ─── -->
 <section id="team">
   <div class="reveal">
-    <div class="section-label">09 // Team</div>
+    <div class="section-label">08 // Team</div>
     <h2 class="section-title">团队配置</h2>
   </div>
 
@@ -2001,7 +2003,7 @@ footer p {
 <!-- ─── BUSINESS ─── -->
 <section id="business">
   <div class="reveal">
-    <div class="section-label">10 // Business Model</div>
+    <div class="section-label">09 // Business Model</div>
     <h2 class="section-title">商业模式</h2>
   </div>
 
@@ -2056,7 +2058,7 @@ footer p {
 <!-- ─── ROADMAP ─── -->
 <section id="roadmap">
   <div class="reveal">
-    <div class="section-label">11 // Roadmap</div>
+    <div class="section-label">10 // Roadmap</div>
     <h2 class="section-title">Roadmap</h2>
   </div>
 
