@@ -3,1451 +3,176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>具身数据业务规划 — 2026</title>
+<title>具身数据业务规划</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
-
+/* ===== CSS Variables ===== */
 :root {
   --cyan: #00e5ff;
   --cyan-dim: #00a5b8;
-  --cyan-glow: rgba(0, 229, 255, 0.15);
+  --cyan-glow: rgba(0,229,255,0.15);
   --amber: #ffab00;
   --amber-dim: #c67f00;
-  --amber-glow: rgba(255, 171, 0, 0.12);
+  --amber-glow: rgba(255,171,0,0.12);
   --bg-deep: #05080e;
-  --bg-card: rgba(10, 18, 32, 0.85);
-  --bg-card-hover: rgba(15, 28, 50, 0.9);
-  --border: rgba(0, 229, 255, 0.12);
-  --border-bright: rgba(0, 229, 255, 0.3);
+  --bg-card: rgba(10,18,32,0.85);
+  --bg-card-hover: rgba(15,28,50,0.9);
+  --border: rgba(0,229,255,0.12);
+  --border-bright: rgba(0,229,255,0.3);
   --text: #e0e8f0;
   --text-dim: #7a8ea6;
   --text-bright: #ffffff;
-  --grid-color: rgba(0, 229, 255, 0.04);
-  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
-  --font-body: 'Noto Sans SC', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-body: 'Noto Sans SC', sans-serif;
 }
 
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+/* ===== Reset & Base ===== */
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; font-family: var(--font-body); background: var(--bg-deep); color: var(--text); }
+body { overflow-x: hidden; position: relative; min-height: 100vh; }
 
-html {
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: var(--cyan-dim) var(--bg-deep);
-}
-
-body {
-  background: var(--bg-deep);
-  color: var(--text);
-  font-family: var(--font-body);
-  font-weight: 400;
-  line-height: 1.75;
-  overflow-x: hidden;
-}
-
-/* ─── GRID BACKGROUND ─── */
+/* Grid background */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background:
-    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
-    linear-gradient(0deg, var(--grid-color) 1px, transparent 1px);
+  background-image:
+    linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
   background-size: 60px 60px;
   pointer-events: none;
   z-index: 0;
 }
 
+/* Radial gradient overlay */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,229,255,0.03), transparent 70%);
+  background: radial-gradient(ellipse at 50% 0%, rgba(0,229,255,0.06) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 100%, rgba(255,171,0,0.04) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
 }
 
-/* ─── AUTH GATE ─── */
-#auth-gate {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  background: var(--bg-deep);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.5s, visibility 0.5s;
-}
-
-#auth-gate.hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.auth-box {
-  text-align: center;
-  padding: 3rem;
-}
-
-.auth-icon {
-  color: var(--cyan);
-  margin-bottom: 1.5rem;
-  opacity: 0.7;
-}
-
-.auth-title {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--cyan);
-  letter-spacing: 0.4em;
-  margin-bottom: 0.5rem;
-}
-
-.auth-sub {
-  font-size: 0.85rem;
-  color: var(--text-dim);
-  margin-bottom: 2rem;
-}
-
-#auth-form {
-  display: flex;
-  gap: 0;
-  justify-content: center;
-}
-
-#auth-input {
-  background: rgba(0, 229, 255, 0.05);
-  border: 1px solid var(--border-bright);
-  border-right: none;
-  border-radius: 3px 0 0 3px;
-  color: var(--text-bright);
-  font-family: var(--font-mono);
-  font-size: 1rem;
-  padding: 0.8rem 1.2rem;
-  width: 260px;
-  outline: none;
-  transition: border-color 0.3s, box-shadow 0.3s;
-  letter-spacing: 0.15em;
-}
-
-#auth-input:focus {
-  border-color: var(--cyan);
-  box-shadow: 0 0 20px var(--cyan-glow);
-}
-
-#auth-input::placeholder {
-  color: var(--text-dim);
-  letter-spacing: 0.1em;
-}
-
-#auth-form button {
-  background: rgba(0, 229, 255, 0.1);
-  border: 1px solid var(--border-bright);
-  border-radius: 0 3px 3px 0;
-  color: var(--cyan);
-  padding: 0.8rem 1rem;
-  cursor: pointer;
-  transition: all 0.3s;
-  display: flex;
-  align-items: center;
-}
-
-#auth-form button:hover {
-  background: rgba(0, 229, 255, 0.2);
-  color: var(--text-bright);
-}
-
-#auth-error {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: #ff4444;
-  margin-top: 1rem;
-  height: 1.2rem;
-  letter-spacing: 0.05em;
-}
-
-#auth-gate.hidden ~ nav,
-#auth-gate.hidden ~ section,
-#auth-gate.hidden ~ .divider,
-#auth-gate.hidden ~ footer,
-#auth-gate.hidden ~ .big-quote { }
-
-body.locked {
-  overflow: hidden;
-}
-
-/* ─── ORIGINAL SLIDE IMAGE ─── */
-.slide-original {
-  margin: 2.5rem 0;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  box-shadow: 0 4px 30px rgba(0, 229, 255, 0.06);
-  transition: border-color 0.3s;
-}
-
-.slide-original:hover {
-  border-color: var(--border-bright);
-}
-
-.slide-original img {
-  width: 100%;
-  display: block;
-}
-
-/* ─── SCANLINE OVERLAY ─── */
+/* Scanlines overlay */
 .scanlines {
   position: fixed;
   inset: 0;
-  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0,0,0,0.03) 0px,
+    rgba(0,0,0,0.03) 1px,
+    transparent 1px,
+    transparent 3px
+  );
   pointer-events: none;
   z-index: 9999;
 }
 
-/* ─── NAVIGATION ─── */
-nav {
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.25); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,229,255,0.45); }
+
+/* ===== Fixed Top Nav ===== */
+.top-nav {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
-  padding: 0 3rem;
   height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(5, 8, 14, 0.8);
-  backdrop-filter: blur(20px);
+  padding: 0 2rem;
+  background: rgba(5,8,14,0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
-  transition: all 0.3s;
+  z-index: 1000;
+  transition: background 0.3s;
 }
-
-nav.scrolled {
-  background: rgba(5, 8, 14, 0.95);
+.top-nav.scrolled {
+  background: rgba(5,8,14,0.92);
   border-bottom-color: var(--border-bright);
 }
-
 .nav-logo {
   font-family: var(--font-mono);
-  font-size: 0.8rem;
   font-weight: 700;
+  font-size: 1rem;
   color: var(--cyan);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-decoration: none;
 }
-
-.nav-logo span { color: var(--text-dim); font-weight: 400; }
-
 .nav-links {
   display: flex;
-  gap: 2rem;
+  gap: 1.6rem;
   list-style: none;
 }
-
 .nav-links a {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   color: var(--text-dim);
   text-decoration: none;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 1px;
   transition: color 0.3s;
-  position: relative;
+  text-transform: uppercase;
 }
-
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: var(--cyan);
-  transition: width 0.3s;
-}
-
-.nav-links a:hover { color: var(--cyan); }
-.nav-links a:hover::after { width: 100%; }
-
-@media (max-width: 900px) {
-  nav { padding: 0 1.5rem; }
-  .nav-links { display: none; }
-}
-
-/* ─── HERO ─── */
-.hero {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 2rem;
-  overflow: hidden;
-}
-
-#particle-canvas {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 1;
-}
-
-.hero-badge {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
+.nav-links a:hover, .nav-links a.active {
   color: var(--cyan);
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  padding: 0.5rem 1.5rem;
-  border: 1px solid var(--border-bright);
-  border-radius: 2px;
-  margin-bottom: 2.5rem;
-  background: var(--cyan-glow);
-  opacity: 0;
-  animation: fadeUp 0.8s 0.3s forwards;
+}
+@media(max-width:768px) {
+  .nav-links { display: none; }
+  .top-nav { padding: 0 1rem; }
 }
 
-.hero h1 {
-  font-family: var(--font-body);
-  font-size: clamp(3rem, 8vw, 6.5rem);
-  font-weight: 900;
-  line-height: 1.1;
-  color: var(--text-bright);
-  letter-spacing: -0.02em;
-  margin-bottom: 1.5rem;
-  opacity: 0;
-  animation: fadeUp 1s 0.5s forwards;
-}
-
-.hero h1 .accent {
-  background: linear-gradient(135deg, var(--cyan), var(--amber));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-sub {
-  font-family: var(--font-mono);
-  font-size: 1rem;
-  color: var(--text-dim);
-  letter-spacing: 0.2em;
-  opacity: 0;
-  animation: fadeUp 0.8s 0.8s forwards;
-}
-
-.hero-scroll {
-  position: absolute;
-  bottom: 3rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  opacity: 0;
-  animation: fadeUp 0.8s 1.2s forwards;
-}
-
-.hero-scroll span {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  color: var(--text-dim);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-.scroll-line {
-  width: 1px;
-  height: 40px;
-  background: linear-gradient(to bottom, var(--cyan), transparent);
-  animation: pulse-line 2s infinite;
-}
-
-@keyframes pulse-line {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 1; }
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ─── SECTIONS ─── */
-section {
+/* ===== Section Layout ===== */
+.site-section {
   position: relative;
   z-index: 1;
   max-width: 1300px;
   margin: 0 auto;
   padding: 8rem 2rem;
 }
-
-@media (max-width: 768px) {
-  section { padding: 4rem 1.25rem; }
+@media(max-width:768px) {
+  .site-section { padding: 5rem 1rem; }
 }
 
+/* ===== Section Labels ===== */
 .section-label {
   font-family: var(--font-mono);
   font-size: 0.65rem;
+  font-weight: 500;
   color: var(--cyan);
-  letter-spacing: 0.35em;
   text-transform: uppercase;
+  letter-spacing: 3px;
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 12px;
 }
-
 .section-label::before {
   content: '';
+  display: inline-block;
   width: 30px;
   height: 1px;
   background: var(--cyan);
 }
 
+/* ===== Section Titles ===== */
 .section-title {
   font-size: clamp(1.8rem, 4vw, 2.8rem);
   font-weight: 900;
   color: var(--text-bright);
-  line-height: 1.25;
   margin-bottom: 3rem;
-  letter-spacing: -0.01em;
-}
-
-/* ─── REVEAL ANIMATIONS ─── */
-.reveal {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.reveal-delay-1 { transition-delay: 0.1s; }
-.reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
-.reveal-delay-4 { transition-delay: 0.4s; }
-
-/* ─── ABOUT ─── */
-.about-intro {
-  font-size: 1.25rem;
-  color: var(--text);
-  font-weight: 300;
-  margin-bottom: 3rem;
-  max-width: 700px;
-  line-height: 2;
-}
-
-.about-intro strong {
-  color: var(--cyan);
-  font-weight: 500;
-}
-
-.timeline {
-  position: relative;
-  padding-left: 2.5rem;
-}
-
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: linear-gradient(to bottom, var(--cyan), var(--border), transparent);
-}
-
-.tl-item {
-  position: relative;
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.tl-item:last-child { border-bottom: none; margin-bottom: 0; }
-
-.tl-item::before {
-  content: '';
-  position: absolute;
-  left: -2.5rem;
-  top: 0.5rem;
-  width: 9px;
-  height: 9px;
-  background: var(--bg-deep);
-  border: 2px solid var(--cyan);
-  border-radius: 50%;
-}
-
-.tl-date {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--amber);
-  letter-spacing: 0.1em;
-  margin-bottom: 0.25rem;
-}
-
-.tl-company {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text-bright);
-  margin-bottom: 0.25rem;
-}
-
-.tl-desc {
-  font-size: 0.9rem;
-  color: var(--text-dim);
-  line-height: 1.7;
-}
-
-.edu-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2.5rem;
-}
-
-.edu-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 1.5rem;
-  transition: border-color 0.3s, background 0.3s;
-}
-
-.edu-card:hover {
-  border-color: var(--border-bright);
-  background: var(--bg-card-hover);
-}
-
-.edu-card .label {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--amber);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  margin-bottom: 0.5rem;
-}
-
-.edu-card .school {
-  font-weight: 700;
-  color: var(--text-bright);
-  margin-bottom: 0.25rem;
-}
-
-.edu-card .degree {
-  font-size: 0.85rem;
-  color: var(--text-dim);
-}
-
-/* ─── METRICS STRIP ─── */
-.metrics {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--border);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  overflow: hidden;
-  margin: 3rem 0;
-}
-
-@media (max-width: 768px) {
-  .metrics { grid-template-columns: repeat(2, 1fr); }
-}
-
-.metric {
-  background: var(--bg-card);
-  padding: 2rem 1.5rem;
-  text-align: center;
-  transition: background 0.3s;
-}
-
-.metric:hover { background: var(--bg-card-hover); }
-
-.metric-value {
-  font-family: var(--font-mono);
-  font-size: clamp(1.8rem, 3vw, 2.5rem);
-  font-weight: 700;
-  color: var(--cyan);
-  line-height: 1;
-  margin-bottom: 0.5rem;
-}
-
-.metric-value .unit {
-  font-size: 0.5em;
-  color: var(--text-dim);
-  font-weight: 400;
-}
-
-.metric-label {
-  font-size: 0.75rem;
-  color: var(--text-dim);
-  letter-spacing: 0.05em;
-}
-
-/* ─── DATA LOOP ─── */
-.loop-visual {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0;
-  margin: 3rem 0;
-  padding: 2rem;
-}
-
-.loop-node {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--text);
-  padding: 0.75rem 1.2rem;
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  border-radius: 2px;
-  white-space: nowrap;
-  transition: all 0.3s;
-}
-
-.loop-node:hover {
-  border-color: var(--cyan);
-  color: var(--cyan);
-  box-shadow: 0 0 20px var(--cyan-glow);
-}
-
-.loop-arrow {
-  font-family: var(--font-mono);
-  color: var(--cyan-dim);
-  font-size: 1rem;
-  padding: 0 0.5rem;
-  animation: arrowPulse 2s infinite;
-}
-
-@keyframes arrowPulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
-}
-
-/* ─── ARCHITECTURE PATHS ─── */
-.arch-paths {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 3rem;
-}
-
-@media (max-width: 768px) {
-  .arch-paths { grid-template-columns: 1fr; }
-}
-
-.arch-path {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 2rem;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.3s;
-}
-
-.arch-path:hover { border-color: var(--border-bright); }
-
-.arch-path::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--cyan), transparent);
-}
-
-.arch-path h3 {
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  color: var(--cyan);
-  margin-bottom: 1rem;
-  font-weight: 700;
-}
-
-.arch-path .flow {
-  font-size: 0.85rem;
-  color: var(--text-dim);
-  line-height: 2;
-}
-
-.arch-path .flow .arrow {
-  color: var(--amber);
-  margin: 0 0.3rem;
-}
-
-/* ─── COMPARISON TABLE ─── */
-.comp-table-wrap {
-  overflow-x: auto;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  margin: 2rem 0;
-}
-
-.comp-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
-  min-width: 800px;
-}
-
-.comp-table thead th {
-  background: rgba(0, 229, 255, 0.06);
-  color: var(--cyan);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 1rem 1.2rem;
-  text-align: left;
-  border-bottom: 1px solid var(--border-bright);
-  white-space: nowrap;
-}
-
-.comp-table tbody td {
-  padding: 0.85rem 1.2rem;
-  border-bottom: 1px solid var(--border);
-  color: var(--text-dim);
-  vertical-align: top;
-  line-height: 1.6;
-}
-
-.comp-table tbody tr:hover td {
-  background: rgba(0, 229, 255, 0.02);
-}
-
-.comp-table tbody td:first-child {
-  font-weight: 700;
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  white-space: nowrap;
-}
-
-.comp-table .highlight-cell {
-  color: var(--amber);
-  font-weight: 500;
-}
-
-.comp-table .callout-cell {
-  background: var(--amber-glow);
-  color: var(--amber);
-  font-weight: 700;
-  border-left: 2px solid var(--amber);
-}
-
-/* ─── PLAYER CARDS ─── */
-.player-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 1.5rem;
-  margin: 2rem 0;
-}
-
-.player-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 2rem;
-  position: relative;
-  transition: all 0.3s;
-}
-
-.player-card:hover {
-  border-color: var(--border-bright);
-  background: var(--bg-card-hover);
-  transform: translateY(-2px);
-}
-
-.player-card.featured {
-  border-color: var(--amber-dim);
-  background: rgba(255, 171, 0, 0.03);
-}
-
-.player-card.featured::before {
-  content: '主要对标';
-  position: absolute;
-  top: -1px;
-  right: 1.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  color: var(--bg-deep);
-  background: var(--amber);
-  padding: 0.2rem 0.8rem;
-  letter-spacing: 0.1em;
-  font-weight: 700;
-}
-
-.player-type {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--cyan);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  margin-bottom: 0.5rem;
-}
-
-.player-name {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text-bright);
-  margin-bottom: 1rem;
-}
-
-.player-traits {
-  list-style: none;
-  margin-bottom: 1rem;
-}
-
-.player-traits li {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  padding: 0.25rem 0;
-  padding-left: 1rem;
-  position: relative;
-}
-
-.player-traits li::before {
-  content: '>';
-  position: absolute;
-  left: 0;
-  color: var(--cyan-dim);
-  font-family: var(--font-mono);
-}
-
-.player-meta {
-  display: flex;
-  gap: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-  font-size: 0.75rem;
-}
-
-.player-meta dt { color: var(--text-dim); }
-.player-meta dd { color: var(--text); font-weight: 500; }
-
-/* ─── TRIAD ─── */
-.triad {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin: 2rem 0;
-}
-
-@media (max-width: 900px) {
-  .triad { grid-template-columns: 1fr; }
-}
-
-.triad-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 2rem;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s;
-}
-
-.triad-card:hover {
-  border-color: var(--border-bright);
-  transform: translateY(-2px);
-}
-
-.triad-card::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-}
-
-.triad-card:nth-child(1)::after { background: var(--cyan); }
-.triad-card:nth-child(2)::after { background: var(--amber); }
-.triad-card:nth-child(3)::after { background: linear-gradient(90deg, var(--cyan), var(--amber)); }
-
-.triad-icon {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--cyan);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  margin-bottom: 0.75rem;
-}
-
-.triad-card:nth-child(2) .triad-icon { color: var(--amber); }
-
-.triad-card h3 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text-bright);
-  margin-bottom: 0.5rem;
-}
-
-.triad-card .sub {
-  font-size: 0.75rem;
-  color: var(--text-dim);
-  margin-bottom: 1rem;
-}
-
-.triad-card ul {
-  list-style: none;
-}
-
-.triad-card li {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  padding: 0.3rem 0;
-  padding-left: 1rem;
-  position: relative;
-}
-
-.triad-card li::before {
-  content: '//';
-  position: absolute;
-  left: 0;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--cyan-dim);
-}
-
-.triad-card:nth-child(2) li::before { color: var(--amber-dim); }
-
-/* ─── MISSION ─── */
-.mission-block {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  overflow: hidden;
-  margin: 2rem 0;
-}
-
-.mission-row {
-  display: grid;
-  grid-template-columns: 160px 1fr;
-  border-bottom: 1px solid var(--border);
-  transition: background 0.3s;
-}
-
-.mission-row:last-child { border-bottom: none; }
-.mission-row:hover { background: rgba(0,229,255,0.02); }
-
-.mission-row .m-label {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--cyan);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  padding: 1.5rem;
-  background: rgba(0,229,255,0.04);
-  display: flex;
-  align-items: flex-start;
-  border-right: 1px solid var(--border);
-}
-
-.mission-row .m-content {
-  padding: 1.5rem 2rem;
-  font-size: 1.05rem;
-  color: var(--text-bright);
-  font-weight: 500;
-}
-
-.mission-row .m-content ul {
-  list-style: none;
-  margin-top: 0.5rem;
-}
-
-.mission-row .m-content li {
-  padding: 0.3rem 0;
-  font-size: 0.9rem;
-  color: var(--text);
-  font-weight: 400;
-}
-
-.mission-row .m-content li strong {
-  color: var(--amber);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-}
-
-@media (max-width: 600px) {
-  .mission-row { grid-template-columns: 1fr; }
-  .mission-row .m-label { border-right: none; border-bottom: 1px solid var(--border); }
-}
-
-/* ─── HARDWARE ─── */
-.hw-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin: 2rem 0;
-}
-
-@media (max-width: 768px) {
-  .hw-grid { grid-template-columns: 1fr; }
-}
-
-.hw-box {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 2rem;
-  transition: border-color 0.3s;
-}
-
-.hw-box:hover { border-color: var(--border-bright); }
-
-.hw-box h3 {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--cyan);
-  letter-spacing: 0.1em;
-  margin-bottom: 1rem;
-}
-
-.hw-tag {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  padding: 0.35rem 0.8rem;
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  margin: 0.2rem;
-  color: var(--text-dim);
-  transition: all 0.3s;
-}
-
-.hw-tag:hover {
-  border-color: var(--cyan);
-  color: var(--cyan);
-  background: var(--cyan-glow);
-}
-
-.hw-flow {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.hw-flow-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.hw-flow-node {
-  font-size: 0.8rem;
-  color: var(--text);
-  font-weight: 500;
-}
-
-.hw-flow-arrow {
-  font-family: var(--font-mono);
-  color: var(--amber-dim);
-  font-size: 0.8rem;
-}
-
-.data-compare {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin: 2rem 0;
-}
-
-@media (max-width: 600px) {
-  .data-compare { grid-template-columns: 1fr; }
-}
-
-.dc-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 1.5rem;
-  text-align: center;
-  transition: all 0.3s;
-}
-
-.dc-card:hover { border-color: var(--border-bright); }
-
-.dc-card h4 {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--text-bright);
-  margin-bottom: 1rem;
-  letter-spacing: 0.05em;
-}
-
-.dc-stat {
-  font-family: var(--font-mono);
-  font-size: 1.6rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
-}
-
-.dc-card:first-child .dc-stat { color: var(--cyan); }
-.dc-card:last-child .dc-stat { color: var(--amber); }
-
-.dc-meta {
-  font-size: 0.75rem;
-  color: var(--text-dim);
-}
-
-/* ─── SYSTEM ARCHITECTURE ─── */
-.sys-flow {
-  display: flex;
-  align-items: stretch;
-  gap: 2px;
-  margin: 2rem 0;
-  overflow-x: auto;
-  padding-bottom: 1rem;
-}
-
-.sys-block {
-  flex: 1;
-  min-width: 220px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 1.5rem;
-  position: relative;
-  transition: all 0.3s;
-}
-
-.sys-block:hover {
-  border-color: var(--border-bright);
-  background: var(--bg-card-hover);
-}
-
-.sys-block h4 {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--cyan);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.sys-block ul {
-  list-style: none;
-}
-
-.sys-block li {
-  font-size: 0.75rem;
-  color: var(--text-dim);
-  padding: 0.2rem 0;
-  padding-left: 0.8rem;
-  position: relative;
-}
-
-.sys-block li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.55rem;
-  width: 4px;
-  height: 4px;
-  background: var(--cyan-dim);
-  border-radius: 50%;
-}
-
-.sys-connector {
-  display: flex;
-  align-items: center;
-  color: var(--cyan-dim);
-  font-family: var(--font-mono);
-  font-size: 1.2rem;
-  flex-shrink: 0;
-  padding: 0 0.25rem;
-}
-
-/* ─── TEAM TABLE ─── */
-.team-table-wrap {
-  overflow-x: auto;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  margin: 2rem 0;
-}
-
-.team-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
-  min-width: 700px;
-}
-
-.team-table th {
-  background: rgba(0,229,255,0.06);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--cyan);
-  letter-spacing: 0.08em;
-  padding: 0.9rem 1rem;
-  text-align: center;
-  border-bottom: 1px solid var(--border-bright);
-  font-weight: 700;
-}
-
-.team-table th:first-child { text-align: left; }
-
-.team-table td {
-  padding: 0.75rem 1rem;
-  text-align: center;
-  border-bottom: 1px solid var(--border);
-  color: var(--text-dim);
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-}
-
-.team-table td:first-child {
-  text-align: left;
-  color: var(--text);
-  font-weight: 700;
-}
-
-.team-table td:last-child {
-  color: var(--amber);
-  font-weight: 700;
-}
-
-.team-table tbody tr:hover td {
-  background: rgba(0,229,255,0.02);
-}
-
-/* ─── BUSINESS MODEL ─── */
-.biz-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  margin: 2rem 0;
-}
-
-.biz-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 1.5rem;
-  transition: all 0.3s;
-}
-
-.biz-card:hover {
-  border-color: var(--border-bright);
-  background: var(--bg-card-hover);
-}
-
-.biz-card .biz-type {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--cyan);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  margin-bottom: 0.75rem;
-}
-
-.biz-card h4 {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-bright);
-  margin-bottom: 0.75rem;
-}
-
-.biz-card p {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  line-height: 1.7;
-}
-
-/* ─── ROADMAP ─── */
-.roadmap-timeline {
-  position: relative;
-  margin: 3rem 0;
-}
-
-.roadmap-line {
-  position: absolute;
-  top: 28px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--border);
-  z-index: 0;
-}
-
-.roadmap-line-fill {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background: linear-gradient(90deg, var(--cyan), var(--amber));
-  width: 0;
-  transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.roadmap-phases {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  position: relative;
-  z-index: 1;
-}
-
-@media (max-width: 900px) {
-  .roadmap-phases { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 500px) {
-  .roadmap-phases { grid-template-columns: 1fr; }
-}
-
-.rm-phase {
-  text-align: center;
-}
-
-.rm-dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  margin: 0 auto 1.5rem;
-  position: relative;
-}
-
-.rm-dot::before {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 1px solid;
-  opacity: 0.3;
-}
-
-.rm-phase:nth-child(1) .rm-dot { background: #10b981; }
-.rm-phase:nth-child(1) .rm-dot::before { border-color: #10b981; }
-.rm-phase:nth-child(2) .rm-dot { background: var(--cyan); }
-.rm-phase:nth-child(2) .rm-dot::before { border-color: var(--cyan); }
-.rm-phase:nth-child(3) .rm-dot { background: var(--amber); }
-.rm-phase:nth-child(3) .rm-dot::before { border-color: var(--amber); }
-.rm-phase:nth-child(4) .rm-dot { background: #a855f7; }
-.rm-phase:nth-child(4) .rm-dot::before { border-color: #a855f7; }
-
-.rm-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 1.5rem;
-  text-align: left;
-  transition: all 0.3s;
-}
-
-.rm-card:hover {
-  border-color: var(--border-bright);
-  transform: translateY(-2px);
-}
-
-.rm-card h3 {
-  font-family: var(--font-mono);
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-bright);
-  margin-bottom: 0.2rem;
-}
-
-.rm-card .rm-year {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--text-dim);
-  margin-bottom: 1rem;
-}
-
-.rm-card dl {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.3rem 0.75rem;
-  font-size: 0.75rem;
-}
-
-.rm-card dt {
-  font-family: var(--font-mono);
-  color: var(--cyan-dim);
-  font-weight: 500;
-}
-
-.rm-card dd {
-  color: var(--text-dim);
-}
-
-/* ─── BIG QUOTE ─── */
-.big-quote {
-  text-align: center;
-  padding: 6rem 2rem;
-  position: relative;
-}
-
-.big-quote::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 400px;
-  height: 400px;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.big-quote p {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 900;
-  color: var(--text-bright);
-  position: relative;
-  letter-spacing: -0.01em;
   line-height: 1.3;
 }
 
-.big-quote p .glow {
-  background: linear-gradient(135deg, var(--cyan), var(--amber));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ─── FOOTER ─── */
-footer {
-  border-top: 1px solid var(--border);
-  padding: 3rem 2rem;
-  text-align: center;
-  position: relative;
-  z-index: 1;
-}
-
-footer p {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--text-dim);
-  letter-spacing: 0.1em;
-}
-
-/* ─── DIVIDER ─── */
+/* ===== Divider ===== */
 .divider {
   max-width: 1300px;
   margin: 0 auto;
@@ -1455,867 +180,1661 @@ footer p {
   position: relative;
   z-index: 1;
 }
-
 .divider-inner {
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border-bright), transparent);
+  background: linear-gradient(90deg, transparent, var(--cyan-dim), transparent);
+  opacity: 0.4;
 }
+
+/* ===== Reveal Animations ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ===== Cards ===== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  transition: background 0.3s, border-color 0.3s;
+}
+.card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-bright);
+}
+
+/* ===== Tables ===== */
+.comp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: clamp(0.72rem, 1.2vw, 0.88rem);
+  line-height: 1.7;
+}
+.comp-table th {
+  font-family: var(--font-mono);
+  background: rgba(0,229,255,0.06);
+  color: var(--cyan);
+  padding: 12px 14px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border-bright);
+  white-space: nowrap;
+}
+.comp-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--text);
+}
+.comp-table tr:hover td {
+  background: rgba(0,229,255,0.03);
+}
+.comp-table .amber-row td {
+  background: var(--amber-glow);
+}
+.comp-table .amber-row:hover td {
+  background: rgba(255,171,0,0.18);
+}
+
+/* ===== Slide Original (images shown as-is) ===== */
+.slide-original {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 40px rgba(0,0,0,0.4);
+}
+.slide-original img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ===== Hero Section ===== */
+.hero {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  overflow: hidden;
+  padding-top: 64px;
+}
+#particleCanvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+.hero-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  color: var(--cyan-dim);
+  border: 1px solid var(--border-bright);
+  border-radius: 999px;
+  padding: 6px 24px;
+  margin-bottom: 2.5rem;
+  text-transform: uppercase;
+  background: rgba(0,229,255,0.05);
+}
+.hero-title {
+  font-size: clamp(2.8rem, 7vw, 5rem);
+  font-weight: 900;
+  color: var(--text-bright);
+  line-height: 1.15;
+  margin-bottom: 0.5rem;
+}
+.hero-title .gradient-accent {
+  background: linear-gradient(135deg, var(--cyan), var(--amber));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-subtitle {
+  font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 2vw, 1.2rem);
+  color: var(--text-dim);
+  letter-spacing: 6px;
+  margin-top: 1rem;
+}
+.scroll-indicator {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  animation: scrollBounce 2s infinite;
+}
+.scroll-indicator span {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.scroll-indicator .arrow {
+  width: 1px;
+  height: 30px;
+  background: linear-gradient(to bottom, var(--cyan-dim), transparent);
+}
+@keyframes scrollBounce {
+  0%,100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-8px); }
+}
+
+/* ===== About Section ===== */
+.about-intro {
+  font-size: 1.05rem;
+  color: var(--amber);
+  font-weight: 500;
+  margin-bottom: 2.5rem;
+  padding: 1rem 1.5rem;
+  background: var(--amber-glow);
+  border-left: 3px solid var(--amber);
+  border-radius: 0 4px 4px 0;
+}
+.about-grid {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+.photo-card {
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border-bright);
+  box-shadow: 0 0 30px rgba(0,229,255,0.08);
+}
+.photo-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.timeline-exp {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.timeline-exp-item {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--cyan-dim);
+  border-radius: 0 4px 4px 0;
+  font-size: 0.88rem;
+}
+.timeline-exp-item .company {
+  color: var(--cyan);
+  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+.timeline-exp-item .desc {
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+.edu-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.edu-card {
+  padding: 1rem 1.2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.edu-card .school {
+  color: var(--cyan);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+.edu-card .degree {
+  color: var(--text-dim);
+  font-size: 0.82rem;
+}
+.sub-label-text {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  margin-bottom: 0.5rem;
+}
+@media(max-width:768px) {
+  .about-grid { grid-template-columns: 1fr; text-align: center; }
+  .photo-card { max-width: 200px; margin: 0 auto; }
+  .timeline-exp-item { grid-template-columns: 1fr; }
+  .edu-cards { grid-template-columns: 1fr; }
+}
+
+/* ===== Architecture Path Cards ===== */
+.arch-path-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+.arch-path-card {
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.arch-path-card h4 {
+  font-family: var(--font-mono);
+  color: var(--cyan);
+  font-size: 0.9rem;
+  margin-bottom: 0.8rem;
+}
+.arch-path-card p {
+  color: var(--text-dim);
+  font-size: 0.84rem;
+  line-height: 1.7;
+}
+
+/* ===== Data Loop Flow Nodes ===== */
+.flow-nodes {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.flow-node {
+  padding: 0.6rem 1.2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--cyan);
+  position: relative;
+}
+.flow-node::after {
+  content: '\2192';
+  position: absolute;
+  right: -1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+.flow-node:last-child::after { display: none; }
+
+/* ===== Metrics Strip ===== */
+.metrics-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+.metric-item {
+  text-align: center;
+  padding: 1.2rem 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.metric-value {
+  font-family: var(--font-mono);
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  font-weight: 700;
+  color: var(--cyan);
+  margin-bottom: 0.3rem;
+}
+.metric-label {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+@media(max-width:768px) {
+  .metrics-strip { grid-template-columns: 1fr 1fr; }
+  .arch-path-cards { grid-template-columns: 1fr; }
+}
+
+/* ===== Player Cards ===== */
+.player-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.player-card {
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  transition: border-color 0.3s, background 0.3s;
+}
+.player-card:hover {
+  border-color: var(--border-bright);
+  background: var(--bg-card-hover);
+}
+.player-card.featured {
+  border-color: rgba(255,171,0,0.3);
+  background: rgba(255,171,0,0.05);
+}
+.player-card.featured:hover {
+  border-color: var(--amber);
+}
+.player-card-type {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 0.5rem;
+}
+.player-card.featured .player-card-type {
+  color: var(--amber);
+}
+.player-card h4 {
+  font-size: 1.05rem;
+  color: var(--text-bright);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+.player-card .traits {
+  margin-bottom: 1rem;
+}
+.player-card .traits li {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+  list-style: none;
+  padding-left: 1rem;
+  position: relative;
+}
+.player-card .traits li::before {
+  content: '\25B8';
+  position: absolute;
+  left: 0;
+  color: var(--cyan-dim);
+}
+.player-card.featured .traits li::before {
+  color: var(--amber-dim);
+}
+.player-card .clients {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
+.player-card .clients strong {
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.player-card .weakness {
+  font-size: 0.78rem;
+  color: #f87171;
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border);
+}
+@media(max-width:768px) {
+  .player-cards { grid-template-columns: 1fr; }
+}
+
+/* ===== Mission Block ===== */
+.mission-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 3rem;
+}
+.mission-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  border-bottom: 1px solid var(--border);
+}
+.mission-row:last-child { border-bottom: none; }
+.mission-row-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 1.2rem 1rem;
+  display: flex;
+  align-items: center;
+  background: rgba(0,229,255,0.04);
+  border-right: 1px solid var(--border);
+}
+.mission-row-value {
+  padding: 1.2rem 1.5rem;
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.8;
+}
+.mission-row-value strong { color: var(--text-bright); }
+.big-quote {
+  text-align: center;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 900;
+  padding: 3rem 1rem;
+  background: linear-gradient(135deg, var(--cyan), var(--amber));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  position: relative;
+}
+.big-quote::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, var(--cyan-glow), transparent 70%);
+  z-index: -1;
+  opacity: 0.5;
+}
+@media(max-width:768px) {
+  .mission-row { grid-template-columns: 1fr; }
+  .mission-row-label { border-right: none; border-bottom: 1px solid var(--border); }
+}
+
+/* ===== Triad Cards ===== */
+.triad-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+.triad-card {
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.triad-card h4 {
+  font-family: var(--font-mono);
+  color: var(--cyan);
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  margin-bottom: 0.3rem;
+}
+.triad-card .triad-sub {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-bottom: 0.8rem;
+}
+.triad-card p {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+.hw-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+.hw-tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(0,229,255,0.06);
+  border: 1px solid var(--border);
+  color: var(--cyan-dim);
+  letter-spacing: 1px;
+}
+@media(max-width:768px) {
+  .triad-cards { grid-template-columns: 1fr; }
+}
+
+/* ===== System Flow Blocks ===== */
+.sys-flow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+  margin-top: 2rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+.sys-block {
+  flex: 1;
+  min-width: 160px;
+  padding: 1.2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.sys-block h4 {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--cyan);
+  margin-bottom: 0.8rem;
+  letter-spacing: 1px;
+}
+.sys-block p, .sys-block ul {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+.sys-block ul { list-style: none; }
+.sys-block ul li { padding-left: 0.8rem; position: relative; }
+.sys-block ul li::before {
+  content: '\00B7';
+  position: absolute;
+  left: 0;
+  color: var(--cyan-dim);
+  font-weight: 700;
+}
+.sys-arrow {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+@media(max-width:768px) {
+  .sys-flow { flex-direction: column; }
+  .sys-arrow { justify-content: center; transform: rotate(90deg); }
+}
+
+/* ===== Team Table ===== */
+.team-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+}
+.team-table th {
+  font-family: var(--font-mono);
+  background: rgba(0,229,255,0.06);
+  color: var(--cyan);
+  padding: 10px 12px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  border-bottom: 1px solid var(--border-bright);
+}
+.team-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  color: var(--text);
+}
+.team-table .year-col {
+  font-family: var(--font-mono);
+  color: var(--cyan);
+  font-weight: 600;
+}
+.team-table .total-col {
+  color: var(--amber);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* ===== Business Model Table ===== */
+.biz-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: clamp(0.72rem, 1.1vw, 0.88rem);
+  line-height: 1.7;
+}
+.biz-table th {
+  font-family: var(--font-mono);
+  background: rgba(0,229,255,0.06);
+  color: var(--cyan);
+  padding: 12px 14px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  border-bottom: 1px solid var(--border-bright);
+  border-right: 1px solid var(--border);
+}
+.biz-table th:last-child { border-right: none; }
+.biz-table th.region-cn {
+  background: rgba(0,229,255,0.1);
+  font-size: 0.85rem;
+  letter-spacing: 3px;
+}
+.biz-table th.region-ov {
+  background: rgba(255,171,0,0.08);
+  color: var(--amber);
+  font-size: 0.85rem;
+  letter-spacing: 3px;
+}
+.biz-table th.sub-ov {
+  background: rgba(255,171,0,0.05);
+  color: var(--amber-dim);
+}
+.biz-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--text);
+}
+.biz-table td:last-child { border-right: none; }
+.biz-table .row-label {
+  font-family: var(--font-mono);
+  color: var(--cyan);
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-align: center;
+  writing-mode: vertical-lr;
+  letter-spacing: 4px;
+  background: rgba(0,229,255,0.03);
+  min-width: 50px;
+}
+.biz-cell-item {
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed rgba(0,229,255,0.06);
+}
+.biz-cell-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.biz-table td strong { color: var(--cyan); }
+.biz-table td strong.ov { color: var(--amber); }
+
+/* ===== Roadmap Timeline ===== */
+.roadmap-timeline {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+  padding-top: 50px;
+}
+.roadmap-timeline::before {
+  content: '';
+  position: absolute;
+  top: 22px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(0,229,255,0.15);
+  border-radius: 2px;
+}
+.roadmap-line-fill {
+  position: absolute;
+  top: 22px;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--cyan), var(--amber));
+  border-radius: 2px;
+  transition: width 1.5s cubic-bezier(0.16,1,0.3,1);
+}
+.rm-node {
+  flex: 1;
+  position: relative;
+  text-align: center;
+  padding: 0 0.5rem;
+}
+.rm-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--cyan);
+  border: 3px solid var(--bg-deep);
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 12px var(--cyan-glow);
+  z-index: 2;
+}
+.rm-node:nth-child(3) .rm-dot,
+.rm-node:nth-child(4) .rm-dot {
+  background: var(--amber);
+  box-shadow: 0 0 12px var(--amber-glow);
+}
+.rm-year {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--cyan);
+  margin-bottom: 4px;
+}
+.rm-node:nth-child(3) .rm-year,
+.rm-node:nth-child(4) .rm-year {
+  color: var(--amber);
+}
+.rm-milestone {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+}
+.rm-details {
+  text-align: left;
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.rm-details dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 10px;
+  font-size: 0.78rem;
+}
+.rm-details dt {
+  font-family: var(--font-mono);
+  color: var(--cyan-dim);
+  font-weight: 500;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+.rm-details dd {
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+.rm-details dd .highlight { color: var(--cyan); font-weight: 600; }
+.rm-details dd .amber-highlight { color: var(--amber); font-weight: 600; }
+@media(max-width:900px) {
+  .roadmap-timeline {
+    flex-direction: column;
+    gap: 2rem;
+    padding-top: 0;
+    padding-left: 30px;
+  }
+  .roadmap-timeline::before {
+    top: 0; bottom: 0; left: 10px; width: 3px; height: 100%; right: auto;
+  }
+  .roadmap-line-fill {
+    top: 0; left: 10px; width: 3px !important; height: 0%;
+    transition: height 1.5s cubic-bezier(0.16,1,0.3,1);
+  }
+  .rm-dot {
+    left: -20px !important; top: 4px !important; transform: none !important;
+  }
+  .rm-node { text-align: left; padding: 0 0 0 0.5rem; }
+}
+
+/* ===== Data Value Chain ===== */
+.value-chain {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+.vc-node {
+  padding: 0.5rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--cyan);
+}
+.vc-arrow { color: var(--text-dim); font-size: 0.8rem; }
+
+/* ===== Password Gate ===== */
+.password-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: var(--bg-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2rem;
+  transition: opacity 0.5s;
+}
+.password-gate .lock-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--cyan-dim);
+  margin-bottom: 0.5rem;
+}
+.password-gate .gate-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 4px;
+  color: var(--cyan-dim);
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+}
+.password-gate .gate-brand {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 3px;
+  margin-top: -0.5rem;
+}
+.gate-input-wrap {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.gate-input-wrap input {
+  font-family: var(--font-mono);
+  padding: 12px 20px;
+  border-radius: 4px;
+  border: 1px solid var(--border-bright);
+  background: rgba(10,18,32,0.9);
+  color: var(--text);
+  font-size: 1rem;
+  outline: none;
+  width: 200px;
+  text-align: center;
+  letter-spacing: 6px;
+  transition: border-color 0.3s;
+}
+.gate-input-wrap input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px var(--cyan-glow);
+}
+.gate-input-wrap button {
+  font-family: var(--font-mono);
+  padding: 12px 24px;
+  border-radius: 4px;
+  border: 1px solid var(--cyan-dim);
+  background: rgba(0,229,255,0.1);
+  color: var(--cyan);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: background 0.3s, border-color 0.3s;
+}
+.gate-input-wrap button:hover {
+  background: rgba(0,229,255,0.2);
+  border-color: var(--cyan);
+}
+.gate-error {
+  color: #f87171;
+  font-size: 0.78rem;
+  height: 20px;
+  font-family: var(--font-mono);
+}
+
+/* ===== Footer ===== */
+.site-footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 3rem 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 3px;
+  border-top: 1px solid var(--border);
+}
+
+/* ===== Counter animation helper ===== */
+.counter { font-variant-numeric: tabular-nums; }
 </style>
 </head>
 <body>
 
-<!-- ─── PASSWORD GATE ─── -->
-<div id="auth-gate">
-  <div class="auth-box">
-    <div class="auth-icon">
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-      </svg>
-    </div>
-    <div class="auth-title">ACCESS REQUIRED</div>
-    <div class="auth-sub">请输入访问密码</div>
-    <form id="auth-form" onsubmit="return checkAuth()">
-      <input type="password" id="auth-input" placeholder="Password" autocomplete="off" autofocus>
-      <button type="submit">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-      </button>
-    </form>
-    <div id="auth-error"></div>
-  </div>
-</div>
-
+<!-- Scanlines -->
 <div class="scanlines"></div>
 
-<!-- ─── NAV ─── -->
-<nav id="nav">
-  <div class="nav-logo">EMBODIED<span>.DATA</span></div>
-  <ul class="nav-links">
+<!-- Password Gate -->
+<div class="password-gate" id="passwordGate">
+  <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+    <circle cx="12" cy="16" r="1"></circle>
+  </svg>
+  <div class="gate-title">Access Required</div>
+  <div class="gate-brand">EMBODIED.DATA</div>
+  <div class="gate-input-wrap">
+    <input id="pwdInput" type="password" placeholder="------" autofocus>
+    <button id="pwdBtn">Enter</button>
+  </div>
+  <div class="gate-error" id="pwdError"></div>
+</div>
+
+<!-- Top Navigation -->
+<nav class="top-nav" id="topNav">
+  <a href="#hero" class="nav-logo">EMBODIED.DATA</a>
+  <ul class="nav-links" id="navLinks">
     <li><a href="#about">About</a></li>
-    <li><a href="#driver">驱动力</a></li>
-    <li><a href="#value">价值</a></li>
-    <li><a href="#players">行业</a></li>
-    <li><a href="#positioning">定位</a></li>
-    <li><a href="#strategy">打法</a></li>
-    <li><a href="#architecture">架构</a></li>
-    <li><a href="#team">团队</a></li>
-    <li><a href="#business">商业</a></li>
+    <li><a href="#dataloop">Core</a></li>
+    <li><a href="#value">Market</a></li>
+    <li><a href="#players">Landscape</a></li>
+    <li><a href="#positioning">Position</a></li>
+    <li><a href="#strategy">Strategy</a></li>
+    <li><a href="#sysarch">System</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#business">Business</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
   </ul>
 </nav>
 
-<!-- ─── HERO ─── -->
-<section class="hero">
-  <canvas id="particle-canvas"></canvas>
-  <div class="hero-content">
+<!-- ==================== HERO ==================== -->
+<section class="hero" id="hero">
+  <canvas id="particleCanvas"></canvas>
+  <div class="hero-content reveal">
     <div class="hero-badge">Embodied Intelligence &middot; Data Infrastructure</div>
-    <h1><span class="accent">具身数据</span><br>业务规划</h1>
-    <p class="hero-sub">2026&mdash;05</p>
+    <div class="hero-title"><span class="gradient-accent">具身数据</span> 业务规划</div>
+    <div class="hero-subtitle">2026&mdash;05</div>
   </div>
-  <div class="hero-scroll">
+  <div class="scroll-indicator">
     <span>Scroll</span>
-    <div class="scroll-line"></div>
+    <div class="arrow"></div>
   </div>
 </section>
 
-<!-- ─── ABOUT ─── -->
-<section id="about">
-  <div class="reveal">
-    <div class="section-label">01 // About Me</div>
-    <h2 class="section-title">一个专注数据、信仰AI的<br>技术型产品业务负责人</h2>
-  </div>
-
-  <div class="reveal reveal-delay-1">
-    <div class="timeline">
-      <div class="tl-item">
-        <div class="tl-date">2024 — 2026</div>
-        <div class="tl-company">理想汽车</div>
-        <div class="tl-desc">自动驾驶数据闭环负责人，支撑理想端到端、VLA两代智驾系统量产上车</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-date">2009 — 2023</div>
-        <div class="tl-company">百度</div>
-        <div class="tl-desc">智驾地图业务总经理，将高精地图数据在规划智驾时代大规模商业化量产</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-date">2007 — 2009</div>
-        <div class="tl-company">灵图</div>
-        <div class="tl-desc">地图数据价值启蒙，基于数据建模及图论算法实现A到B的路线规划服务</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="reveal reveal-delay-2">
-    <div class="edu-grid">
-      <div class="edu-card">
-        <div class="label">EMBA 2023-2026</div>
-        <div class="school">中欧国际工商学院</div>
-        <div class="degree">工商管理EMBA学位</div>
-      </div>
-      <div class="edu-card">
-        <div class="label">本科 + 硕士 2000-2007</div>
-        <div class="school">华中科技大学</div>
-        <div class="degree">计算机本科硕士学位</div>
-      </div>
-    </div>
-  </div>
-</section>
-
+<!-- ==================== 01 ABOUT ME ==================== -->
 <div class="divider"><div class="divider-inner"></div></div>
-
-<!-- ─── DATA LOOP ─── -->
-<section id="driver">
-  <div class="reveal">
-    <div class="section-label">02 // Core Driver</div>
-    <h2 class="section-title">数据闭环是自动驾驶<br>快速突破的本质驱动力</h2>
-  </div>
-
-  <div class="reveal reveal-delay-1">
-    <div class="slide-original">
-      <img src="images/v3_slide_3.png" alt="数据闭环架构图">
+<section class="site-section" id="about">
+  <div class="section-label reveal">01 // About Me</div>
+  <h2 class="section-title reveal">About Me</h2>
+  <div class="about-intro reveal">一个专注数据、信仰AI的技术型产品业务负责人</div>
+  <div class="about-grid">
+    <div class="reveal">
+      <div class="photo-card">
+        <img src="images/photo.png" alt="Profile Photo">
+      </div>
     </div>
-  </div>
-
-  <div class="reveal reveal-delay-2">
-    <div class="arch-paths">
-      <div class="arch-path">
-        <h3>端到端 + VLM</h3>
-        <div class="flow">
-          导航 <span class="arrow">&rarr;</span> One Model 规控端 <span class="arrow">&rarr;</span> 轨迹<br>
-          传感器 <span class="arrow">&rarr;</span> VLM 视觉-语言大模型
+    <div>
+      <div class="section-label reveal" style="margin-bottom:1.5rem">Work Experience</div>
+      <div class="timeline-exp">
+        <div class="timeline-exp-item reveal">
+          <div class="company">理想汽车 (2024-2026)</div>
+          <div class="desc">自动驾驶数据闭环负责人，支撑理想两代基于AI大模型的智驾系统量产上车</div>
+        </div>
+        <div class="timeline-exp-item reveal reveal-delay-1">
+          <div class="company">百度 (2009-2023)</div>
+          <div class="desc">智驾地图业务总经理，将高精地图数据在基于规则的智驾时代大规模商业化</div>
+        </div>
+        <div class="timeline-exp-item reveal reveal-delay-2">
+          <div class="company">灵图 (2007-2009)</div>
+          <div class="desc">算法工程师，基于地图数据建模及图论算法实现A到B的路线规划引擎服务</div>
         </div>
       </div>
-      <div class="arch-path">
-        <h3>VLA</h3>
-        <div class="flow">
-          导航 + 传感器 <span class="arrow">&rarr;</span> VLA 视觉-语言-行为大模型 <span class="arrow">&rarr;</span> 轨迹
+      <div class="section-label reveal" style="margin-bottom:1.5rem">Education</div>
+      <div class="edu-cards">
+        <div class="edu-card reveal">
+          <div class="school">中欧国际工商学院</div>
+          <div class="degree">工商管理EMBA学位 (2023-2026)</div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="reveal reveal-delay-2">
-    <div class="loop-visual">
-      <div class="loop-node">Shadow Mode Validation</div>
-      <div class="loop-arrow">&rarr;</div>
-      <div class="loop-node">Data Trigger</div>
-      <div class="loop-arrow">&rarr;</div>
-      <div class="loop-node">Data Mining</div>
-      <div class="loop-arrow">&rarr;</div>
-      <div class="loop-node">Valid Samples</div>
-      <div class="loop-arrow">&rarr;</div>
-      <div class="loop-node">Auto Labeling</div>
-      <div class="loop-arrow">&rarr;</div>
-      <div class="loop-node">Training Dataset</div>
-      <div class="loop-arrow">&rarr;</div>
-      <div class="loop-node">Model Training</div>
-      <div class="loop-arrow">&circlearrowright;</div>
-    </div>
-  </div>
-
-  <div class="reveal reveal-delay-3">
-    <div class="metrics">
-      <div class="metric">
-        <div class="metric-value"><span data-count="1.5">0</span>B+ <span class="unit">km</span></div>
-        <div class="metric-label">车辆采集数据</div>
-      </div>
-      <div class="metric">
-        <div class="metric-value"><span data-count="10">0</span>B+ <span class="unit">frames</span></div>
-        <div class="metric-label">周期训练数据</div>
-      </div>
-      <div class="metric">
-        <div class="metric-value"><span data-count="200">0</span>+ <span class="unit">triggers</span></div>
-        <div class="metric-label">15-45s clips</div>
-      </div>
-      <div class="metric">
-        <div class="metric-value"><span data-count="1">0</span> <span class="unit">min</span></div>
-        <div class="metric-label">数据反馈速度</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"><div class="divider-inner"></div></div>
-
-<!-- ─── VALUE ─── -->
-<section id="value">
-  <div class="reveal">
-    <div class="section-label">03 // Market Value</div>
-    <h2 class="section-title">具身智能时代到来<br>具身数据将更具价值</h2>
-  </div>
-
-  <div class="reveal reveal-delay-1">
-    <div class="comp-table-wrap">
-      <table class="comp-table">
-        <thead>
-          <tr>
-            <th>AI时代</th>
-            <th>模型</th>
-            <th>场景</th>
-            <th>数据</th>
-            <th>机会总结</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>自动驾驶</td>
-            <td>技术路线收敛</td>
-            <td>主机厂主导，数据封闭<br>视觉、点云等模态<br>规模约一亿clips，合计100万小时规模</td>
-            <td>来自互联网，开放<br>文本、图6、视频多模态<br>规模约万亿tokens规模</td>
-            <td>数据公司沦为低端外包标注公司，市值约百亿人民币级，代表公司数据堂、奥睿、曼孚等</td>
-          </tr>
-          <tr>
-            <td>大语言模型</td>
-            <td>技术路线基本收敛</td>
-            <td>场景集中，语言、代码等</td>
-            <td>来自互联网，开放<br>文本、图6、视频多模态<br>规模约万亿tokens规模</td>
-            <td>通过深度挖掘数据提供价值，市值数百亿美金，代表公司 Scale AI、Surge AI 等</td>
-          </tr>
-          <tr>
-            <td style="font-weight:700;color:var(--amber);">具身智能</td>
-            <td class="highlight-cell">技术路线还未收敛</td>
-            <td class="highlight-cell">场景分散、服务场景众多</td>
-            <td class="highlight-cell">来自人类物理交互采集<br>视觉、语言、触觉、力觉<br>等复杂多模态<br>规模预计一亿小时，100倍于自动驾驶</td>
-            <td class="callout-cell">数据价值极高，有三方的中立数据提供商机会，市值预计数千亿人民币级</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<div class="divider"><div class="divider-inner"></div></div>
-
-<!-- ─── PLAYERS ─── -->
-<section id="players">
-  <div class="reveal">
-    <div class="section-label">04 // Competitive Landscape</div>
-    <h2 class="section-title">当前行业玩家主要分三类<br>场景切入派是主要对标</h2>
-  </div>
-
-  <div class="reveal reveal-delay-1">
-    <div class="player-grid">
-      <div class="player-card">
-        <div class="player-type">独立数据公司</div>
-        <div class="player-name">光轮智能 / 鹏明机器人 / 简智机器人</div>
-        <ul class="player-traits">
-          <li>合成数据投入早，有一定规模</li>
-          <li>国际客户订单</li>
-          <li>核心投入在硬件迭代，卖设备+服务</li>
-          <li>具备一定可迁移数据治理能力</li>
-          <li>工程化落地能力强</li>
-        </ul>
-        <div class="player-meta">
-          <div><dt>客户</dt><dd>NVIDIA、Generalist 等</dd></div>
-          <div><dt>劣势</dt><dd>规模小、资源受限</dd></div>
-        </div>
-      </div>
-
-      <div class="player-card">
-        <div class="player-type">模型切入</div>
-        <div class="player-name">觅峰科技</div>
-        <ul class="player-traits">
-          <li>和模型绑定，快速闭环验证</li>
-          <li>早期资源比较多</li>
-        </ul>
-        <div class="player-meta">
-          <div><dt>客户</dt><dd>智元、字节、海外大厂</dd></div>
-          <div><dt>劣势</dt><dd>模型公司孵化，不中立</dd></div>
-        </div>
-      </div>
-
-      <div class="player-card featured">
-        <div class="player-type">场景切入派</div>
-        <div class="player-name">京东云</div>
-        <ul class="player-traits">
-          <li>场景-数据-模型-本体全链路布局</li>
-          <li>数采广，大手笔投入</li>
-          <li>下行能力强，平台型打法</li>
-        </ul>
-        <div class="player-meta">
-          <div><dt>客户</dt><dd>众擎、智元、千寻等</dd></div>
-          <div><dt>劣势</dt><dd>自研模型参与市场，不够中立</dd></div>
+        <div class="edu-card reveal reveal-delay-1">
+          <div class="school">华中科技大学</div>
+          <div class="degree">计算机本科硕士学位 (2000-2007)</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ==================== 02 CORE DRIVER ==================== -->
 <div class="divider"><div class="divider-inner"></div></div>
+<section class="site-section" id="dataloop">
+  <div class="section-label reveal">02 // Core Driver</div>
+  <h2 class="section-title reveal">数据闭环是自动驾驶快速突破的本质驱动力</h2>
 
-<!-- ─── POSITIONING ─── -->
-<section id="positioning">
-  <div class="reveal">
-    <div class="section-label">05 // Positioning</div>
-    <h2 class="section-title">定位：成为全球最大的<br>具身数据基础设施</h2>
+  <div class="sub-label-text reveal">理想自动驾驶演进路线</div>
+  <div class="slide-original reveal">
+    <img src="images/page-03-cropped.png" alt="数据闭环架构图">
   </div>
 
-  <div class="reveal reveal-delay-1">
-    <div class="mission-block">
+  <div class="arch-path-cards">
+    <div class="arch-path-card reveal">
+      <h4>E2E + VLM</h4>
+      <p>端到端感知决策一体化，视觉语言模型辅助理解复杂场景，数据闭环驱动模型持续进化</p>
+    </div>
+    <div class="arch-path-card reveal reveal-delay-1">
+      <h4>VLA</h4>
+      <p>视觉-语言-动作模型，将感知理解与行动决策统一，实现更接近人类认知的驾驶范式</p>
+    </div>
+  </div>
+
+  <div class="flow-nodes reveal">
+    <div class="flow-node">数据采集</div>
+    <div class="flow-node">数据治理</div>
+    <div class="flow-node">模型训练</div>
+    <div class="flow-node">仿真验证</div>
+    <div class="flow-node">部署上车</div>
+    <div class="flow-node">反馈闭环</div>
+  </div>
+
+  <div class="metrics-strip reveal">
+    <div class="metric-item">
+      <div class="metric-value counter" data-target="1.5">1.5B+</div>
+      <div class="metric-label">km</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-value counter">10B+</div>
+      <div class="metric-label">frames</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-value counter">200+</div>
+      <div class="metric-label">triggers</div>
+    </div>
+    <div class="metric-item">
+      <div class="metric-value counter">1min</div>
+      <div class="metric-label">feedback</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 03 MARKET VALUE ==================== -->
+<div class="divider"><div class="divider-inner"></div></div>
+<section class="site-section" id="value">
+  <div class="section-label reveal">03 // Market Value</div>
+  <h2 class="section-title reveal">具身智能时代到来，具身数据将更具价值</h2>
+  <div class="card reveal" style="overflow-x:auto; padding:0;">
+    <table class="comp-table">
+      <thead>
+        <tr><th>AI时代</th><th>模型</th><th>场景</th><th>数据</th><th>价值和机会</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:var(--cyan)">自动驾驶</strong></td>
+          <td>技术路线收敛</td>
+          <td>场景单一，只有驾驶</td>
+          <td>来源：主机厂主导，数据封闭<br>内容：视觉、点云等少量模态<br>规模：等效约100万小时clips</td>
+          <td>数据公司沦为低端外包标注<br>市值百亿人民币级<br><span style="color:var(--text-dim)">代表公司数据堂、奥鹏、曼孚等</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--cyan)">大语言模型</strong></td>
+          <td>技术路线基本收敛</td>
+          <td>场景多，LLM和代码成熟，还有垂类场景</td>
+          <td>来源：来自互联网，数据开放<br>内容：文本、图像、视频多模态<br>规模：超过万亿tokens</td>
+          <td>通过深挖垂类数据提供价值<br>市值数百亿美金<br><span style="color:var(--text-dim)">代表公司Scale AI、Surge AI等</span></td>
+        </tr>
+        <tr class="amber-row">
+          <td><strong style="color:var(--amber)">具身智能</strong></td>
+          <td><span style="color:#f87171;font-weight:600">技术路线还未收敛</span></td>
+          <td>场景众多，极度分散，服务千行百业</td>
+          <td>来源：需采集人类物理交互数据<br>内容：视觉、语言、触觉、力觉等复杂多模态<br>规模：预计至少上亿小时，是自动驾驶数据量的<strong style="color:var(--amber)">100倍</strong>以上</td>
+          <td style="color:var(--amber)">数据价值极高，有独立数据公司机会<br>市值预计数千亿人民币级<br><span style="color:#f87171;font-weight:600">且当前正是切入赛道的绝佳时机</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================== 04 COMPETITIVE LANDSCAPE ==================== -->
+<div class="divider"><div class="divider-inner"></div></div>
+<section class="site-section" id="players">
+  <div class="section-label reveal">04 // Competitive Landscape</div>
+  <h2 class="section-title reveal">当前行业玩家主要分三类，场景切入派是主要对标</h2>
+  <div class="player-cards">
+    <div class="player-card reveal">
+      <div class="player-card-type">独立数据公司</div>
+      <h4>光轮智能 / 鹿明机器人 / 简智机器人</h4>
+      <ul class="traits">
+        <li>合成数据投入早有一定规模</li>
+        <li>国际客户订单</li>
+        <li>核心投入在硬件迭代卖设备+服务</li>
+        <li>具备一定可迁移数据治理能力</li>
+        <li>工程化落地能力更强</li>
+      </ul>
+      <div class="clients"><strong>Clients:</strong> NVIDIA、Generalsit等</div>
+      <div class="weakness">创业公司还比较小，资源受限，数据难以快速scaling</div>
+    </div>
+    <div class="player-card reveal reveal-delay-1">
+      <div class="player-card-type">模型切入</div>
+      <h4>觅蜂科技</h4>
+      <ul class="traits">
+        <li>和模型绑定快速闭环验证</li>
+        <li>早期资源比较多</li>
+      </ul>
+      <div class="clients"><strong>Clients:</strong> 蚂蚁灵波、小米、智元、字节、海外大厂</div>
+      <div class="weakness">模型公司孵化，不中立</div>
+    </div>
+    <div class="player-card featured reveal reveal-delay-2">
+      <div class="player-card-type">场景切入</div>
+      <h4>京东云</h4>
+      <ul class="traits">
+        <li>场景-数据-模型-本体全链路布局</li>
+        <li>数采厂大手笔投入</li>
+        <li>线下能力强</li>
+        <li>平台型打法</li>
+      </ul>
+      <div class="clients"><strong>Clients:</strong> 众擎、智元、千寻等（主要是被投公司）</div>
+      <div class="weakness">自研模型和本体参与市场，不够中立</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 05 POSITIONING ==================== -->
+<div class="divider"><div class="divider-inner"></div></div>
+<section class="site-section" id="positioning">
+  <div class="section-label reveal">05 // Positioning</div>
+  <h2 class="section-title reveal">目标：成为全球最大的具身数据基础设施</h2>
+
+  <div class="card reveal" style="padding:0; overflow:hidden; margin-bottom:3rem;">
+    <div class="mission-rows">
       <div class="mission-row">
-        <div class="m-label">使命</div>
-        <div class="m-content">以数据驱动实现物理AGI</div>
+        <div class="mission-row-label">使命</div>
+        <div class="mission-row-value">以数据驱动实现<strong>物理AGI</strong></div>
       </div>
       <div class="mission-row">
-        <div class="m-label">愿景</div>
-        <div class="m-content">2030年，成为全球最大的具身数据基础设施</div>
+        <div class="mission-row-label">愿景</div>
+        <div class="mission-row-value"><strong style="color:var(--amber)">2030</strong>年，成为全球最大的<strong>具身数据基础设施</strong></div>
       </div>
       <div class="mission-row">
-        <div class="m-label">战略目标</div>
-        <div class="m-content">
-          分解三大核心目标：
-          <ul>
-            <li><strong>【商业】</strong> 三年订单份额第一、五年收入份额第一</li>
-            <li><strong>【产品】</strong> 高质量数据三年千万小时、五年上亿小时</li>
-            <li><strong>【技术】</strong> 引领全球最领先的具身数据驱动技术范式</li>
-          </ul>
+        <div class="mission-row-label">战略目标</div>
+        <div class="mission-row-value">
+          分解三大核心目标：<br>
+          <strong style="color:var(--cyan)">【商业】</strong>实现市场份额和财务回报达到全球第一<br>
+          <strong style="color:var(--cyan)">【产品】</strong>高质量数据集产品总规模达到上亿小时<br>
+          <strong style="color:var(--cyan)">【技术】</strong>引领全球最先进的数据驱动新技术范式
         </div>
       </div>
     </div>
   </div>
+
+  <div class="big-quote reveal">以数据驱动 实现 物理AGI</div>
 </section>
 
-<!-- ─── BIG QUOTE ─── -->
-<div class="big-quote reveal">
-  <p>以数据驱动<br>实现<span class="glow">物理AGI</span></p>
-</div>
-
+<!-- ==================== 06 STRATEGY ==================== -->
 <div class="divider"><div class="divider-inner"></div></div>
+<section class="site-section" id="strategy">
+  <div class="section-label reveal">06 // Strategy</div>
+  <h2 class="section-title reveal">打法：快速打通"场景-数据-模型"正向迭代闭环</h2>
 
-<!-- ─── STRATEGY (打法) ─── -->
-<section id="strategy">
-  <div class="reveal">
-    <div class="section-label">06 // Strategy & Solution</div>
-    <h2 class="section-title">打法：快速打通"场景-数据-模型"<br>正向迭代闭环</h2>
+  <div class="slide-original reveal">
+    <img src="images/page-07-cropped.png" alt="场景-数据-模型正向迭代闭环架构图">
   </div>
 
-  <div class="reveal reveal-delay-1">
-    <div class="slide-original">
-      <img src="images/v3_slide_7.png" alt="打法：场景-数据-模型正向迭代闭环">
+  <div class="triad-cards">
+    <div class="triad-card reveal">
+      <h4>场景</h4>
+      <div class="triad-sub">集团资源</div>
+      <p>依托集团丰富场景资源，快速获取真实物理世界交互数据，涵盖家庭、零售、物流等场景</p>
+    </div>
+    <div class="triad-card reveal reveal-delay-1">
+      <h4>数据</h4>
+      <div class="triad-sub">自建新团队</div>
+      <p>自建专业数据团队，覆盖采集、处理、标注、质检全流程，打造高质量数据生产体系</p>
+    </div>
+    <div class="triad-card reveal reveal-delay-2">
+      <h4>模型</h4>
+      <div class="triad-sub">被投X公司</div>
+      <p>联合被投模型公司，快速验证数据质量与价值，形成数据-模型正向迭代闭环</p>
     </div>
   </div>
 
-  <div class="reveal reveal-delay-2">
-    <div class="triad">
-      <div class="triad-card">
-        <div class="triad-icon">场景</div>
-        <h3>场景</h3>
-        <div class="sub">集团资源</div>
-        <ul>
-          <li>场景理解与定义</li>
-          <li>数采运营与管理</li>
-          <li>自有场景 / 政企合作 / 合作场景数采</li>
-        </ul>
-      </div>
-      <div class="triad-card">
-        <div class="triad-icon">数据</div>
-        <h3>数据</h3>
-        <div class="sub">自建新团队</div>
-        <ul>
-          <li>数据采集 / 数采设备 / 数据合规</li>
-          <li>数据处理 / 云端大模型</li>
-          <li>仿真与合成 / 世界模型</li>
-          <li>数据集产品</li>
-        </ul>
-      </div>
-      <div class="triad-card">
-        <div class="triad-icon">模型</div>
-        <h3>模型</h3>
-        <div class="sub">被投X公司</div>
-        <ul>
-          <li>模型评测体系定义</li>
-          <li>研发迭代与管理</li>
-          <li>需求 &rarr; 交付 &rarr; 部署 &rarr; 验证</li>
-        </ul>
-      </div>
-    </div>
+  <div class="hw-tags reveal">
+    <span class="hw-tag">Ego</span>
+    <span class="hw-tag">UMI/手套</span>
+    <span class="hw-tag">全身动捕</span>
+    <span class="hw-tag">肌电手环</span>
+    <span class="hw-tag">定位传感器</span>
+    <span class="hw-tag">皮肤传感器</span>
+    <span class="hw-tag">RGB</span>
   </div>
 
-  <div class="reveal reveal-delay-3">
-    <div class="hw-grid">
-      <div class="hw-box">
-        <h3>数据采集设备</h3>
-        <div style="display:flex;flex-wrap:wrap;gap:0.3rem;">
-          <span class="hw-tag">Ego 第一视角</span>
-          <span class="hw-tag">UMI / 手套</span>
-          <span class="hw-tag">肌电手环</span>
-          <span class="hw-tag">皮肤传感器</span>
-          <span class="hw-tag">全身动捕</span>
-          <span class="hw-tag">定位/深度传感器</span>
-          <span class="hw-tag">RGB 第三视角</span>
-        </div>
-      </div>
-      <div class="hw-box">
-        <h3>数据价值链</h3>
-        <div class="hw-flow">
-          <div class="hw-flow-row">
-            <span class="hw-flow-node">World Modeling</span>
-            <span class="hw-flow-arrow">&rarr;</span>
-            <span class="hw-flow-node">Simulating</span>
-            <span class="hw-flow-arrow">&rarr;</span>
-            <span class="hw-flow-node" style="color:var(--cyan);">Ego-Centric Video Data</span>
-          </div>
-          <div class="hw-flow-row">
-            <span class="hw-flow-node">Action Fine-Tuning</span>
-            <span class="hw-flow-arrow">&rarr;</span>
-            <span class="hw-flow-node">Aligning</span>
-            <span class="hw-flow-arrow">&rarr;</span>
-            <span class="hw-flow-node" style="color:var(--cyan);">Wearable Sensorized Data</span>
-          </div>
-          <div class="hw-flow-row">
-            <span class="hw-flow-node">Physical RL</span>
-            <span class="hw-flow-arrow">&rarr;</span>
-            <span class="hw-flow-node">Surpassing</span>
-            <span class="hw-flow-arrow">&rarr;</span>
-            <span class="hw-flow-node" style="color:var(--cyan);">Teleop Data</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="reveal reveal-delay-4">
-    <div class="data-compare">
-      <div class="dc-card">
-        <h4>Ego视频数据</h4>
-        <div class="dc-stat">一亿小时</div>
-        <div class="dc-meta">动作数据 &middot; 成本：低</div>
-      </div>
-      <div class="dc-card">
-        <h4>遥操数据</h4>
-        <div class="dc-stat">百万小时</div>
-        <div class="dc-meta">高精度 &middot; 成本：高</div>
-      </div>
-    </div>
+  <div class="value-chain reveal">
+    <div class="vc-node">场景识别</div>
+    <span class="vc-arrow">&rarr;</span>
+    <div class="vc-node">硬件部署</div>
+    <span class="vc-arrow">&rarr;</span>
+    <div class="vc-node">数据采集</div>
+    <span class="vc-arrow">&rarr;</span>
+    <div class="vc-node">数据处理</div>
+    <span class="vc-arrow">&rarr;</span>
+    <div class="vc-node">模型训练</div>
+    <span class="vc-arrow">&rarr;</span>
+    <div class="vc-node">部署验证</div>
   </div>
 </section>
 
+<!-- ==================== 07 SYSTEM ARCHITECTURE ==================== -->
 <div class="divider"><div class="divider-inner"></div></div>
+<section class="site-section" id="sysarch">
+  <div class="section-label reveal">07 // System Architecture</div>
+  <h2 class="section-title reveal">系统架构</h2>
 
-<!-- ─── ARCHITECTURE ─── -->
-<section id="architecture">
-  <div class="reveal">
-    <div class="section-label">07 // System Architecture</div>
-    <h2 class="section-title">系统架构：Real2Sim2Real 架构设计</h2>
+  <div class="slide-original reveal">
+    <img src="images/page-08-cropped.png" alt="系统架构图">
   </div>
 
-  <div class="reveal reveal-delay-1">
-    <div class="slide-original">
-      <img src="images/v3_slide_8.png" alt="Real2Sim2Real系统架构">
+  <div class="sys-flow reveal">
+    <div class="sys-block">
+      <h4>Real数据采集</h4>
+      <ul>
+        <li>多模态传感器</li>
+        <li>多场景覆盖</li>
+        <li>标准化采集流程</li>
+        <li>实时质量监控</li>
+      </ul>
     </div>
-  </div>
-
-  <div class="reveal reveal-delay-2">
-    <div class="sys-flow">
-      <div class="sys-block">
-        <h4>Real 数据采集</h4>
-        <ul>
-          <li>采集系统 / 任务管理</li>
-          <li>传感器融合处理及压缩</li>
-          <li>操作系统 / 硬件系统</li>
-          <li>自动标注平台</li>
-          <li>VLA标注 / 目标标注 / 行为标注</li>
-          <li>样本管理 / 任务分配</li>
-          <li>大模型与训练平台</li>
-          <li>场景理解 / 并行训练 / VLM</li>
-        </ul>
-      </div>
-      <div class="sys-connector">&rarr;</div>
-      <div class="sys-block">
-        <h4>数据平台</h4>
-        <ul>
-          <li>数据管线</li>
-          <li>数据质量评测</li>
-        </ul>
-      </div>
-      <div class="sys-connector">&rarr;</div>
-      <div class="sys-block">
-        <h4>模型训练</h4>
-        <ul>
-          <li>VLA</li>
-          <li>WAM</li>
-          <li>模型公司协同</li>
-        </ul>
-      </div>
-      <div class="sys-connector">&harr;</div>
-      <div class="sys-block">
-        <h4>Sim 仿真平台</h4>
-        <ul>
-          <li>世界模型</li>
-          <li>重建 / 生成</li>
-          <li>数据合成</li>
-          <li>资产 / 场景</li>
-          <li>物理逻辑</li>
-        </ul>
-      </div>
-      <div class="sys-connector">&rarr;</div>
-      <div class="sys-block" style="flex:0.5;min-width:120px;">
-        <h4>Real 应用</h4>
-        <ul>
-          <li>部署</li>
-          <li>验证</li>
-        </ul>
-      </div>
+    <div class="sys-arrow">&rarr;</div>
+    <div class="sys-block">
+      <h4>数据平台</h4>
+      <ul>
+        <li>数据清洗与治理</li>
+        <li>自动化标注</li>
+        <li>数据检索与管理</li>
+        <li>数据集产品化</li>
+      </ul>
+    </div>
+    <div class="sys-arrow">&rarr;</div>
+    <div class="sys-block">
+      <h4>模型训练</h4>
+      <ul>
+        <li>多任务训练</li>
+        <li>增量学习</li>
+        <li>质量评估</li>
+        <li>模型迭代</li>
+      </ul>
+    </div>
+    <div class="sys-arrow">&harr;</div>
+    <div class="sys-block">
+      <h4>Sim仿真平台</h4>
+      <ul>
+        <li>场景生成</li>
+        <li>数据增强</li>
+        <li>模型验证</li>
+        <li>虚实迁移</li>
+      </ul>
+    </div>
+    <div class="sys-arrow">&rarr;</div>
+    <div class="sys-block">
+      <h4>Real应用</h4>
+      <ul>
+        <li>部署上线</li>
+        <li>效果监控</li>
+        <li>反馈回收</li>
+        <li>持续优化</li>
+      </ul>
     </div>
   </div>
 </section>
 
+<!-- ==================== 08 TEAM ==================== -->
 <div class="divider"><div class="divider-inner"></div></div>
-
-<!-- ─── TEAM ─── -->
-<section id="team">
-  <div class="reveal">
-    <div class="section-label">08 // Team</div>
-    <h2 class="section-title">团队配置</h2>
-  </div>
-
-  <div class="reveal reveal-delay-1">
-    <div class="team-table-wrap">
-      <table class="team-table">
-        <thead>
-          <tr>
-            <th>时间</th>
-            <th>预研</th>
-            <th>算法</th>
-            <th>工程</th>
-            <th>硬件</th>
-            <th>产品</th>
-            <th>商务</th>
-            <th>GR</th>
-            <th>总计</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>7月启动</td><td>2</td><td>2</td><td>2</td><td>1</td><td>2</td><td>1</td><td>1</td><td>10+</td></tr>
-          <tr><td>2026</td><td>5</td><td>12</td><td>10</td><td>10</td><td>5</td><td>5</td><td>3</td><td>50</td></tr>
-          <tr><td>2027</td><td>10</td><td>30</td><td>30</td><td>30</td><td>20</td><td>20</td><td>10</td><td>150</td></tr>
-          <tr><td>2028</td><td>20</td><td>60</td><td>60</td><td>60</td><td>40</td><td>40</td><td>20</td><td>300</td></tr>
-          <tr><td>2029</td><td>30</td><td>80</td><td>80</td><td>80</td><td>50</td><td>60</td><td>20</td><td>400</td></tr>
-          <tr><td>2030</td><td>40</td><td>100</td><td>100</td><td>80</td><td>60</td><td>100</td><td>20</td><td>500</td></tr>
-        </tbody>
-      </table>
-    </div>
+<section class="site-section" id="team">
+  <div class="section-label reveal">08 // Team</div>
+  <h2 class="section-title reveal">团队配置</h2>
+  <div class="card reveal" style="overflow-x:auto; padding:0;">
+    <table class="team-table">
+      <thead>
+        <tr>
+          <th>年份</th><th>预研</th><th>算法</th><th>工程</th><th>硬件</th><th>产品</th><th>商务</th><th>GR</th><th>总计</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="year-col">7月启动</td><td>2</td><td>2</td><td>2</td><td>1</td><td>2</td><td>1</td><td>1</td><td class="total-col">10+</td></tr>
+        <tr><td class="year-col">2026</td><td>5</td><td>12</td><td>10</td><td>10</td><td>5</td><td>5</td><td>3</td><td class="total-col">50</td></tr>
+        <tr><td class="year-col">2027</td><td>10</td><td>30</td><td>30</td><td>30</td><td>20</td><td>20</td><td>10</td><td class="total-col">150</td></tr>
+        <tr><td class="year-col">2028</td><td>20</td><td>60</td><td>60</td><td>60</td><td>40</td><td>40</td><td>20</td><td class="total-col">300</td></tr>
+        <tr><td class="year-col">2029</td><td>30</td><td>80</td><td>80</td><td>80</td><td>50</td><td>60</td><td>20</td><td class="total-col">400</td></tr>
+        <tr><td class="year-col">2030</td><td>40</td><td>100</td><td>100</td><td>80</td><td>60</td><td>100</td><td>20</td><td class="total-col">500</td></tr>
+      </tbody>
+    </table>
   </div>
 </section>
 
+<!-- ==================== 09 BUSINESS MODEL ==================== -->
 <div class="divider"><div class="divider-inner"></div></div>
-
-<!-- ─── BUSINESS ─── -->
-<section id="business">
-  <div class="reveal">
-    <div class="section-label">09 // Business Model</div>
-    <h2 class="section-title">商业模式</h2>
-  </div>
-
-  <div class="reveal reveal-delay-1">
-    <div class="biz-grid">
-      <div class="biz-card">
-        <div class="biz-type">2B &middot; 国内</div>
-        <h4>数据交易</h4>
-        <p>销售数据使用权，可重复销售。主打标品，接受客户定制。定价按元/小时，定制+标品模式。</p>
-      </div>
-      <div class="biz-card">
-        <div class="biz-type">2G &middot; 国内</div>
-        <h4>方案总包</h4>
-        <p>项目制方式，总包合同。可向政府采购，标品可能复用。政府数采基地接受订单，专项数采或集采。</p>
-      </div>
-      <div class="biz-card">
-        <div class="biz-type">2A &middot; 国内</div>
-        <h4>硬件销售</h4>
-        <p>销售2B硬件+售后服务。联合实验室开展数据联合开发，论文、专利输出。</p>
-      </div>
-      <div class="biz-card">
-        <div class="biz-type">2B/2A &middot; 海外</div>
-        <h4>总体模式</h4>
-        <p>考虑数据合规，海外数据生产和销售采用自产自销模式。主要由海外分公司运营，国内支持平台持续支持。</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="reveal reveal-delay-2">
-    <div class="biz-grid">
-      <div class="biz-card">
-        <div class="biz-type">供应端</div>
-        <h4>自有体系</h4>
-        <p>人员提供数采补充，配套服务。58承担补充人力。服务公司约定成本转移或利润分成。</p>
-      </div>
-      <div class="biz-card">
-        <div class="biz-type">供应端</div>
-        <h4>政府数采基地</h4>
-        <p>接受订单，专项数采或集采。流程集中走完方可。</p>
-      </div>
-      <div class="biz-card">
-        <div class="biz-type">供应端</div>
-        <h4>联合实验室</h4>
-        <p>合作开展数据联合开发。论文、专利输出。</p>
-      </div>
-    </div>
+<section class="site-section" id="business">
+  <div class="section-label reveal">09 // Business Model</div>
+  <h2 class="section-title reveal">商业模式</h2>
+  <div class="card reveal" style="overflow-x:auto; padding:0;">
+    <table class="biz-table">
+      <thead>
+        <tr>
+          <th rowspan="2" style="min-width:60px;">区域/<br>客户分类</th>
+          <th colspan="3" class="region-cn">国内</th>
+          <th class="region-ov">海外</th>
+        </tr>
+        <tr>
+          <th>2B</th>
+          <th>2A</th>
+          <th>2G</th>
+          <th class="sub-ov">2B/2A</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="row-label"><span>销售端</span></td>
+          <td>
+            <div class="biz-cell-item"><strong>数据交易：</strong>销售数据使用权，可重复销售；主打标品，接受大客户定制</div>
+            <div class="biz-cell-item"><strong>硬件售卖：</strong>买断式，类似消费电子产品；可选签订数据回购协议</div>
+            <div class="biz-cell-item"><strong>方案集成：</strong>帮场景方落地全套机器人服务；场景数采，联合模型后训练</div>
+          </td>
+          <td>
+            <div class="biz-cell-item"><strong>硬件销售：</strong>类似2B硬件销售，但价格策略可能灵活</div>
+            <div class="biz-cell-item"><strong>数据交易：</strong>类似2B数据交易，但规模预估较小</div>
+          </td>
+          <td>
+            <div class="biz-cell-item"><strong>方案总包：</strong>项目制方式，接总包订单，开展数据采集项目，硬件多样异构，数据统一接入我方平台，处理加工后产出数据集，所有权归政府</div>
+            <div class="biz-cell-item"><strong>硬件销售：</strong>不做总包，只给政府卖数采设备</div>
+            <div class="biz-cell-item"><strong>数据采购：</strong>可选向政府采购数据集，或帮助政府分销数据集获得分成</div>
+          </td>
+          <td>
+            <div class="biz-cell-item"><strong class="ov">总体模式：</strong>考虑数据合规，海外数据生产和销售均发生在海外，采用自产自销的模式</div>
+            <div class="biz-cell-item"><strong class="ov">数据交易：</strong>模式和策略和国内相同，但整体产品定价高于国内，主要考虑海外人力成本更高且客户支付能力更强</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="row-label"><span>供应端</span></td>
+          <td>
+            <div class="biz-cell-item"><strong>自有场景：</strong>人员提供数采补贴，配备硬件；补贴和费用由数据公司承担</div>
+            <div class="biz-cell-item"><strong>合作场景：</strong>主动挑选，签订长期框架协议；按照采集数据量做价采购</div>
+          </td>
+          <td>
+            <div class="biz-cell-item"><strong>联合实验室：</strong>共同开展课题研究，论文成果共有；公司提供预算支持</div>
+          </td>
+          <td>
+            <div class="biz-cell-item"><strong>硬件销售：</strong>不做总包，只给政府卖数采设备，销售方案同2B模式</div>
+            <div class="biz-cell-item"><strong>数据采购：</strong>可选向政府采购数据集，或者帮助政府分销数据集获得分成</div>
+          </td>
+          <td>
+            <div class="biz-cell-item"><strong class="ov">硬件：</strong>复用一套采集硬件，硬件生产在国内，运输海外使用，海外硬件成本增加软件适配、运输和售后相关费用</div>
+            <div class="biz-cell-item"><strong class="ov">技术：</strong>复用一套数据处理技术平台，可支持在海外独立部署和运营，国内支持平台持续升级</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </section>
 
+<!-- ==================== 10 ROADMAP ==================== -->
 <div class="divider"><div class="divider-inner"></div></div>
-
-<!-- ─── ROADMAP ─── -->
-<section id="roadmap">
-  <div class="reveal">
-    <div class="section-label">10 // Roadmap</div>
-    <h2 class="section-title">Roadmap</h2>
-  </div>
-
-  <div class="reveal reveal-delay-1">
-    <div class="roadmap-timeline">
-      <div class="roadmap-line"><div class="roadmap-line-fill" id="rm-fill"></div></div>
-      <div class="roadmap-phases">
-        <div class="rm-phase">
-          <div class="rm-dot"></div>
-          <div class="rm-card">
-            <h3>PMF</h3>
-            <div class="rm-year">&rarr; 2026.12</div>
-            <dl>
-              <dt>产品</dt><dd>基于X硬件打通全流程，发布数据集产品，聚焦家庭场景</dd>
-              <dt>客户</dt><dd>标杆客户 X</dd>
-              <dt>订单</dt><dd>1亿</dd>
-              <dt>费用</dt><dd>5000万</dd>
-              <dt>团队</dt><dd>50人</dd>
-            </dl>
-          </div>
-        </div>
-        <div class="rm-phase">
-          <div class="rm-dot"></div>
-          <div class="rm-card">
-            <h3>Scale</h3>
-            <div class="rm-year">&rarr; 2027</div>
-            <dl>
-              <dt>产品</dt><dd>发布自研数采硬件，数据集百万小时，拓展多场景</dd>
-              <dt>客户</dt><dd>3-5家</dd>
-              <dt>订单</dt><dd>5亿</dd>
-              <dt>收入</dt><dd>2-3亿</dd>
-              <dt>团队</dt><dd>150人</dd>
-            </dl>
-          </div>
-        </div>
-        <div class="rm-phase">
-          <div class="rm-dot"></div>
-          <div class="rm-card">
-            <h3>Breakeven</h3>
-            <div class="rm-year">&rarr; 2028</div>
-            <dl>
-              <dt>产品</dt><dd>换代数采硬件，数据集千万小时，覆盖多数场景</dd>
-              <dt>客户</dt><dd>20家以上</dd>
-              <dt>收入</dt><dd>15亿</dd>
-              <dt>利润</dt><dd>1亿</dd>
-              <dt>团队</dt><dd>300人</dd>
-            </dl>
-          </div>
-        </div>
-        <div class="rm-phase">
-          <div class="rm-dot"></div>
-          <div class="rm-card">
-            <h3>Profit</h3>
-            <div class="rm-year">&rarr; 2030</div>
-            <dl>
-              <dt>产品</dt><dd>全球数据规模第一，数据集上亿小时，全场景覆盖</dd>
-              <dt>客户</dt><dd>50家以上</dd>
-              <dt>收入</dt><dd>100亿</dd>
-              <dt>利润</dt><dd>35亿 (35%)</dd>
-              <dt>团队</dt><dd>500人</dd>
-            </dl>
-          </div>
-        </div>
+<section class="site-section" id="roadmap">
+  <div class="section-label reveal">10 // Roadmap</div>
+  <h2 class="section-title reveal">Roadmap</h2>
+  <div class="roadmap-timeline reveal" id="roadmapTimeline">
+    <div class="roadmap-line-fill" id="roadmapLineFill"></div>
+    <div class="rm-node">
+      <div class="rm-dot"></div>
+      <div class="rm-year">2026.12</div>
+      <div class="rm-milestone">PMF</div>
+      <div class="rm-details">
+        <dl>
+          <dt>产品</dt><dd>基于X硬件打通全流程 &middot; 发布数据集产品 &middot; 聚焦家庭场景</dd>
+          <dt>客户</dt><dd>标杆客户X</dd>
+          <dt>订单</dt><dd class="highlight">1亿</dd>
+          <dt>费用</dt><dd>5000万</dd>
+          <dt>团队</dt><dd class="highlight">50人</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="rm-node">
+      <div class="rm-dot"></div>
+      <div class="rm-year">2027</div>
+      <div class="rm-milestone">Scale</div>
+      <div class="rm-details">
+        <dl>
+          <dt>产品</dt><dd>发布自研数采硬件 &middot; 数据集总量百万小时 &middot; 拓展多场景</dd>
+          <dt>客户</dt><dd>3-5家</dd>
+          <dt>订单</dt><dd class="highlight">5亿</dd>
+          <dt>收入</dt><dd>2-3亿</dd>
+          <dt>费用</dt><dd>2亿</dd>
+          <dt>团队</dt><dd class="highlight">150人</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="rm-node">
+      <div class="rm-dot"></div>
+      <div class="rm-year">2028</div>
+      <div class="rm-milestone">Breakeven</div>
+      <div class="rm-details">
+        <dl>
+          <dt>产品</dt><dd>发布换代数采硬件 &middot; 数据集总量千万小时 &middot; 覆盖多数场景</dd>
+          <dt>客户</dt><dd>20家以上</dd>
+          <dt>订单</dt><dd class="amber-highlight">50亿</dd>
+          <dt>收入</dt><dd>15亿</dd>
+          <dt>利润</dt><dd class="amber-highlight">1亿</dd>
+          <dt>团队</dt><dd class="amber-highlight">300人</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="rm-node">
+      <div class="rm-dot"></div>
+      <div class="rm-year">2030</div>
+      <div class="rm-milestone">Profit</div>
+      <div class="rm-details">
+        <dl>
+          <dt>产品</dt><dd>达成全球数据规模第一 &middot; 数据集总量上亿小时 &middot; 基本覆盖全场景</dd>
+          <dt>客户</dt><dd>50家以上</dd>
+          <dt>订单</dt><dd class="amber-highlight">100亿</dd>
+          <dt>收入</dt><dd class="amber-highlight">100亿</dd>
+          <dt>利润</dt><dd class="amber-highlight">35亿 (Rate 35%)</dd>
+          <dt>团队</dt><dd class="amber-highlight">500人</dd>
+        </dl>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ─── FOOTER ─── -->
-<footer>
-  <p>具身数据业务规划 V3 &mdash; 2026</p>
+<!-- ==================== FOOTER ==================== -->
+<footer class="site-footer">
+  具身数据业务规划 &mdash; 2026
 </footer>
 
 <script>
-/* ─── AUTH ─── */
-const PASS_HASH = 'dc091e2936acae646078be694deac4d22a533e19cdd67be2efa6d812fcc41184';
-
-async function sha256(text) {
-  const data = new TextEncoder().encode(text);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-async function checkAuth() {
-  const input = document.getElementById('auth-input').value;
-  const hash = await sha256(input);
-  if (hash === PASS_HASH) {
-    document.getElementById('auth-gate').classList.add('hidden');
-    document.body.classList.remove('locked');
-    sessionStorage.setItem('authed', '1');
-    return false;
+// ===== Password Gate (SHA-256) =====
+(function(){
+  const gate = document.getElementById('passwordGate');
+  const inp = document.getElementById('pwdInput');
+  const err = document.getElementById('pwdError');
+  if (sessionStorage.getItem('ed_auth') === '1') {
+    gate.remove();
+    return;
   }
-  document.getElementById('auth-error').textContent = 'ACCESS DENIED — 密码错误';
-  document.getElementById('auth-input').value = '';
-  document.getElementById('auth-input').focus();
-  return false;
-}
+  document.documentElement.style.overflow = 'hidden';
 
-(function() {
-  if (sessionStorage.getItem('authed') === '1') {
-    document.getElementById('auth-gate').classList.add('hidden');
-  } else {
-    document.body.classList.add('locked');
+  async function sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   }
+
+  async function check() {
+    const hash = await sha256(inp.value);
+    // Pre-computed SHA-256 of "202605"
+    if (hash === 'dc091e2936acae646078be694deac4d22a533e19cdd67be2efa6d812fcc41184') {
+      sessionStorage.setItem('ed_auth', '1');
+      gate.style.opacity = '0';
+      setTimeout(() => { gate.remove(); document.documentElement.style.overflow = ''; }, 500);
+    } else {
+      err.textContent = '密码错误，请重试';
+      inp.value = '';
+      inp.focus();
+    }
+  }
+
+  document.getElementById('pwdBtn').onclick = check;
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
 })();
 
-/* ─── PARTICLE FIELD ─── */
-(function() {
-  const canvas = document.getElementById('particle-canvas');
+// ===== Particle Canvas (Hero) =====
+(function(){
+  const canvas = document.getElementById('particleCanvas');
   const ctx = canvas.getContext('2d');
   let particles = [];
-  let w, h;
-  let mouse = { x: -1000, y: -1000 };
+  let mouse = { x: -9999, y: -9999 };
+  const PARTICLE_COUNT = 80;
+  const CONNECT_DIST = 150;
+  const MOUSE_RADIUS = 120;
 
   function resize() {
-    w = canvas.width = canvas.offsetWidth;
-    h = canvas.height = canvas.offsetHeight;
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
   }
-
-  function init() {
-    resize();
-    particles = [];
-    const count = Math.min(Math.floor((w * h) / 8000), 150);
-    for (let i = 0; i < count; i++) {
-      particles.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        r: Math.random() * 1.5 + 0.5,
-        alpha: Math.random() * 0.5 + 0.1
-      });
-    }
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, w, h);
-
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-
-      if (p.x < 0) p.x = w;
-      if (p.x > w) p.x = 0;
-      if (p.y < 0) p.y = h;
-      if (p.y > h) p.y = 0;
-
-      /* mouse repel */
-      const dx = p.x - mouse.x;
-      const dy = p.y - mouse.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 150) {
-        p.x += dx * 0.01;
-        p.y += dy * 0.01;
-      }
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(0, 229, 255, ${p.alpha})`;
-      ctx.fill();
-
-      /* connect nearby */
-      for (let j = i + 1; j < particles.length; j++) {
-        const p2 = particles[j];
-        const dx2 = p.x - p2.x;
-        const dy2 = p.y - p2.y;
-        const d = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-        if (d < 120) {
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.strokeStyle = `rgba(0, 229, 255, ${0.08 * (1 - d / 120)})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-      }
-    }
-
-    requestAnimationFrame(draw);
-  }
+  resize();
+  window.addEventListener('resize', resize);
 
   canvas.addEventListener('mousemove', e => {
     const rect = canvas.getBoundingClientRect();
     mouse.x = e.clientX - rect.left;
     mouse.y = e.clientY - rect.top;
   });
+  canvas.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
 
-  canvas.addEventListener('mouseleave', () => {
-    mouse.x = -1000;
-    mouse.y = -1000;
-  });
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.vx = (Math.random() - 0.5) * 0.5;
+      this.vy = (Math.random() - 0.5) * 0.5;
+      this.r = Math.random() * 1.5 + 0.5;
+    }
+    update() {
+      // Mouse repel
+      const dx = this.x - mouse.x;
+      const dy = this.y - mouse.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < MOUSE_RADIUS && dist > 0) {
+        const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS * 0.8;
+        this.vx += (dx / dist) * force;
+        this.vy += (dy / dist) * force;
+      }
+      this.vx *= 0.98;
+      this.vy *= 0.98;
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.x < 0) this.x = canvas.width;
+      if (this.x > canvas.width) this.x = 0;
+      if (this.y < 0) this.y = canvas.height;
+      if (this.y > canvas.height) this.y = 0;
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0,229,255,0.6)';
+      ctx.fill();
+    }
+  }
 
-  window.addEventListener('resize', () => { resize(); });
-  init();
-  draw();
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push(new Particle());
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < particles.length; i++) {
+      particles[i].update();
+      particles[i].draw();
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < CONNECT_DIST) {
+          const alpha = (1 - dist / CONNECT_DIST) * 0.15;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(0,229,255,${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
 })();
 
-/* ─── SCROLL REVEAL ─── */
-const reveals = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-reveals.forEach(el => observer.observe(el));
-
-/* ─── NAV SCROLL ─── */
-window.addEventListener('scroll', () => {
-  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
-});
-
-/* ─── COUNTER ANIMATION ─── */
-const counters = document.querySelectorAll('[data-count]');
-const counterObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const el = entry.target;
-      const target = parseFloat(el.dataset.count);
-      const isFloat = target % 1 !== 0;
-      const duration = 1500;
-      const start = performance.now();
-
-      function tick(now) {
-        const elapsed = now - start;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        const current = target * eased;
-        el.textContent = isFloat ? current.toFixed(1) : Math.floor(current);
-        if (progress < 1) requestAnimationFrame(tick);
+// ===== Scroll Reveal (IntersectionObserver) =====
+(function(){
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
       }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+})();
 
-      requestAnimationFrame(tick);
-      counterObserver.unobserve(el);
+// ===== Nav Scroll Effect =====
+(function(){
+  const nav = document.getElementById('topNav');
+  const links = document.querySelectorAll('#navLinks a');
+  const sections = document.querySelectorAll('.site-section, .hero');
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
     }
   });
-}, { threshold: 0.5 });
 
-counters.forEach(el => counterObserver.observe(el));
+  // Active link
+  const sectionObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        links.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(s => { if (s.id) sectionObserver.observe(s); });
+})();
 
-/* ─── ROADMAP LINE FILL ─── */
-const rmFill = document.getElementById('rm-fill');
-const rmObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      rmFill.style.width = '100%';
-      rmObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.2 });
+// ===== Roadmap Line Fill =====
+(function(){
+  const timeline = document.getElementById('roadmapTimeline');
+  const fill = document.getElementById('roadmapLineFill');
+  if (!timeline || !fill) return;
 
-rmObserver.observe(document.querySelector('.roadmap-timeline'));
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Check if mobile (vertical) or desktop (horizontal)
+        const isMobile = window.innerWidth <= 900;
+        if (isMobile) {
+          fill.style.height = '100%';
+        } else {
+          fill.style.width = '100%';
+        }
+      }
+    });
+  }, { threshold: 0.2 });
+  observer.observe(timeline);
+})();
+
+// ===== Counter Animation =====
+(function(){
+  const counters = document.querySelectorAll('.metric-value');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(c => observer.observe(c));
+})();
 </script>
-
 </body>
 </html>
