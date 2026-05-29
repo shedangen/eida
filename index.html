@@ -945,14 +945,14 @@ body::after {
 .rm-details dl {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 4px 10px;
-  font-size: 0.78rem;
+  gap: 5px 12px;
+  font-size: 0.9rem;
 }
 .rm-details dt {
   font-family: var(--font-mono);
   color: var(--cyan-dim);
   font-weight: 500;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   letter-spacing: 1px;
   white-space: nowrap;
 }
@@ -1199,51 +1199,13 @@ body::after {
 <!-- ==================== 02 CORE DRIVER ==================== -->
 <div class="divider"><div class="divider-inner"></div></div>
 <section class="site-section" id="dataloop">
-  <div class="section-label reveal">02 // Core Driver</div>
+  <div class="section-label reveal">02 // Experience</div>
   <h2 class="section-title reveal">数据闭环是自动驾驶快速突破的本质驱动力</h2>
 
   <div class="slide-original reveal">
     <img src="images/page-03-cropped.png" alt="数据闭环架构图">
   </div>
 
-  <div class="arch-path-cards">
-    <div class="arch-path-card reveal">
-      <h4>E2E + VLM</h4>
-      <p>端到端感知决策一体化，视觉语言模型辅助理解复杂场景，数据闭环驱动模型持续进化</p>
-    </div>
-    <div class="arch-path-card reveal reveal-delay-1">
-      <h4>VLA</h4>
-      <p>视觉-语言-动作模型，将感知理解与行动决策统一，实现更接近人类认知的驾驶范式</p>
-    </div>
-  </div>
-
-  <div class="flow-nodes reveal">
-    <div class="flow-node">数据采集</div>
-    <div class="flow-node">数据治理</div>
-    <div class="flow-node">模型训练</div>
-    <div class="flow-node">仿真验证</div>
-    <div class="flow-node">部署上车</div>
-    <div class="flow-node">反馈闭环</div>
-  </div>
-
-  <div class="metrics-strip reveal">
-    <div class="metric-item">
-      <div class="metric-value counter" data-target="1.5">1.5B+</div>
-      <div class="metric-label">km</div>
-    </div>
-    <div class="metric-item">
-      <div class="metric-value counter">10B+</div>
-      <div class="metric-label">frames</div>
-    </div>
-    <div class="metric-item">
-      <div class="metric-value counter">200+</div>
-      <div class="metric-label">triggers</div>
-    </div>
-    <div class="metric-item">
-      <div class="metric-value counter">1min</div>
-      <div class="metric-label">feedback</div>
-    </div>
-  </div>
 </section>
 
 <!-- ==================== 03 MARKET VALUE ==================== -->
@@ -1368,47 +1330,6 @@ body::after {
     <img src="images/page-07-cropped.png" alt="场景-数据-模型正向迭代闭环架构图">
   </div>
 
-  <div class="triad-cards">
-    <div class="triad-card reveal">
-      <h4>场景</h4>
-      <div class="triad-sub">集团资源</div>
-      <p>依托集团丰富场景资源，快速获取真实物理世界交互数据，涵盖家庭、零售、物流等场景</p>
-    </div>
-    <div class="triad-card reveal reveal-delay-1">
-      <h4>数据</h4>
-      <div class="triad-sub">自建新团队</div>
-      <p>自建专业数据团队，覆盖采集、处理、标注、质检全流程，打造高质量数据生产体系</p>
-    </div>
-    <div class="triad-card reveal reveal-delay-2">
-      <h4>模型</h4>
-      <div class="triad-sub">被投X公司</div>
-      <p>联合被投模型公司，快速验证数据质量与价值，形成数据-模型正向迭代闭环</p>
-    </div>
-  </div>
-
-  <div class="hw-tags reveal">
-    <span class="hw-tag">Ego</span>
-    <span class="hw-tag">UMI/手套</span>
-    <span class="hw-tag">全身动捕</span>
-    <span class="hw-tag">肌电手环</span>
-    <span class="hw-tag">定位传感器</span>
-    <span class="hw-tag">皮肤传感器</span>
-    <span class="hw-tag">RGB</span>
-  </div>
-
-  <div class="value-chain reveal">
-    <div class="vc-node">场景识别</div>
-    <span class="vc-arrow">&rarr;</span>
-    <div class="vc-node">硬件部署</div>
-    <span class="vc-arrow">&rarr;</span>
-    <div class="vc-node">数据采集</div>
-    <span class="vc-arrow">&rarr;</span>
-    <div class="vc-node">数据处理</div>
-    <span class="vc-arrow">&rarr;</span>
-    <div class="vc-node">模型训练</div>
-    <span class="vc-arrow">&rarr;</span>
-    <div class="vc-node">部署验证</div>
-  </div>
 </section>
 
 <!-- ==================== 07 SYSTEM ARCHITECTURE ==================== -->
@@ -1421,57 +1342,6 @@ body::after {
     <img src="images/page-08-cropped.png" alt="系统架构图">
   </div>
 
-  <div class="sys-flow reveal">
-    <div class="sys-block">
-      <h4>Real数据采集</h4>
-      <ul>
-        <li>多模态传感器</li>
-        <li>多场景覆盖</li>
-        <li>标准化采集流程</li>
-        <li>实时质量监控</li>
-      </ul>
-    </div>
-    <div class="sys-arrow">&rarr;</div>
-    <div class="sys-block">
-      <h4>数据平台</h4>
-      <ul>
-        <li>数据清洗与治理</li>
-        <li>自动化标注</li>
-        <li>数据检索与管理</li>
-        <li>数据集产品化</li>
-      </ul>
-    </div>
-    <div class="sys-arrow">&rarr;</div>
-    <div class="sys-block">
-      <h4>模型训练</h4>
-      <ul>
-        <li>多任务训练</li>
-        <li>增量学习</li>
-        <li>质量评估</li>
-        <li>模型迭代</li>
-      </ul>
-    </div>
-    <div class="sys-arrow">&harr;</div>
-    <div class="sys-block">
-      <h4>Sim仿真平台</h4>
-      <ul>
-        <li>场景生成</li>
-        <li>数据增强</li>
-        <li>模型验证</li>
-        <li>虚实迁移</li>
-      </ul>
-    </div>
-    <div class="sys-arrow">&rarr;</div>
-    <div class="sys-block">
-      <h4>Real应用</h4>
-      <ul>
-        <li>部署上线</li>
-        <li>效果监控</li>
-        <li>反馈回收</li>
-        <li>持续优化</li>
-      </ul>
-    </div>
-  </div>
 </section>
 
 <!-- ==================== 08 TEAM ==================== -->
@@ -1479,6 +1349,24 @@ body::after {
 <section class="site-section" id="team">
   <div class="section-label reveal">08 // Team</div>
   <h2 class="section-title reveal">团队配置</h2>
+
+  <div class="org-chart reveal" style="margin-bottom:2.5rem;">
+    <div style="display:flex;justify-content:center;gap:1.2rem;margin-bottom:1rem;">
+      <div style="padding:10px 28px;background:linear-gradient(135deg,rgba(0,229,255,0.15),rgba(0,229,255,0.06));border:1px solid var(--border-bright);border-radius:4px;font-family:var(--font-mono);font-weight:700;color:var(--cyan);font-size:0.9rem;letter-spacing:2px;">Head</div>
+      <div style="padding:10px 28px;background:rgba(255,171,0,0.08);border:1px solid rgba(255,171,0,0.25);border-radius:4px;font-family:var(--font-mono);font-weight:700;color:var(--amber);font-size:0.9rem;letter-spacing:2px;">首席科学家</div>
+    </div>
+    <div style="width:1px;height:20px;background:var(--border-bright);margin:0 auto;"></div>
+    <div style="display:flex;gap:0.6rem;flex-wrap:wrap;justify-content:center;">
+      <div style="padding:8px 20px;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;font-family:var(--font-mono);font-size:0.78rem;color:var(--text);letter-spacing:1px;">预研</div>
+      <div style="padding:8px 20px;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;font-family:var(--font-mono);font-size:0.78rem;color:var(--text);letter-spacing:1px;">算法</div>
+      <div style="padding:8px 20px;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;font-family:var(--font-mono);font-size:0.78rem;color:var(--text);letter-spacing:1px;">工程</div>
+      <div style="padding:8px 20px;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;font-family:var(--font-mono);font-size:0.78rem;color:var(--text);letter-spacing:1px;">硬件</div>
+      <div style="padding:8px 20px;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;font-family:var(--font-mono);font-size:0.78rem;color:var(--text);letter-spacing:1px;">产品</div>
+      <div style="padding:8px 20px;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;font-family:var(--font-mono);font-size:0.78rem;color:var(--text);letter-spacing:1px;">商务</div>
+      <div style="padding:8px 20px;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;font-family:var(--font-mono);font-size:0.78rem;color:var(--text);letter-spacing:1px;">GR</div>
+    </div>
+  </div>
+
   <div class="card reveal" style="overflow-x:auto; padding:0;">
     <table class="team-table">
       <thead>
