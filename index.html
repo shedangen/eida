@@ -284,7 +284,8 @@ body::after {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 0;
+  z-index: 10;
+  pointer-events: none;
 }
 .hero-content {
   position: relative;
@@ -1579,12 +1580,11 @@ body::after {
   resize();
   window.addEventListener('resize', resize);
 
-  canvas.addEventListener('mousemove', e => {
-    const rect = canvas.getBoundingClientRect();
-    mouse.x = e.clientX - rect.left;
-    mouse.y = e.clientY - rect.top;
+  document.addEventListener('mousemove', e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
   });
-  canvas.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
+  document.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
 
   class Particle {
     constructor() {
