@@ -610,7 +610,7 @@ body::after {
 @media(max-width:768px) {
   .player-cards { grid-template-columns: 1fr; }
   .phase-cards { grid-template-columns: 1fr !important; }
-  .metrics-bar { grid-template-columns: 1fr 1fr !important; }
+  .closeloop-row { grid-template-columns: 1fr !important; }
 }
 
 /* ===== Mission Block ===== */
@@ -1205,6 +1205,7 @@ body::after {
   <div class="section-label reveal">02 // Experience</div>
   <h2 class="section-title reveal">数据闭环是自动驾驶快速突破的本质驱动力</h2>
 
+  <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--cyan-dim);letter-spacing:3px;text-transform:uppercase;margin-bottom:1rem;" class="reveal">理想自动驾驶演进路线</div>
   <div class="phase-cards reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2.5rem;">
     <div class="card" style="position:relative;overflow:hidden;padding:1.5rem;">
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--cyan);"></div>
@@ -1226,26 +1227,27 @@ body::after {
     </div>
   </div>
 
-  <div class="slide-original reveal">
-    <img src="images/page-03-cropped.png" alt="数据闭环架构图">
-  </div>
-
-  <div class="metrics-bar reveal" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-top:2.5rem;">
-    <div style="background:var(--bg-card);padding:1.5rem;text-align:center;">
-      <div style="font-family:var(--font-mono);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:var(--cyan);line-height:1;margin-bottom:0.4rem;">1.5B+</div>
-      <div style="font-size:0.75rem;color:var(--text-dim);">km 车辆采集数据</div>
+  <div class="closeloop-row reveal" style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center;">
+    <div class="slide-original" style="margin:0;">
+      <img src="images/closeloop.png" alt="数据闭环流程图">
     </div>
-    <div style="background:var(--bg-card);padding:1.5rem;text-align:center;">
-      <div style="font-family:var(--font-mono);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:var(--cyan);line-height:1;margin-bottom:0.4rem;">10B+</div>
-      <div style="font-size:0.75rem;color:var(--text-dim);">frames 训练数据</div>
-    </div>
-    <div style="background:var(--bg-card);padding:1.5rem;text-align:center;">
-      <div style="font-family:var(--font-mono);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:var(--amber);line-height:1;margin-bottom:0.4rem;">200+</div>
-      <div style="font-size:0.75rem;color:var(--text-dim);">triggers 15-45s clips</div>
-    </div>
-    <div style="background:var(--bg-card);padding:1.5rem;text-align:center;">
-      <div style="font-family:var(--font-mono);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:var(--amber);line-height:1;margin-bottom:0.4rem;">1min</div>
-      <div style="font-size:0.75rem;color:var(--text-dim);">数据反馈速度</div>
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+      <div class="card" style="display:flex;align-items:center;gap:1.2rem;padding:1.2rem 1.5rem;">
+        <div style="font-family:var(--font-mono);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:var(--cyan);line-height:1;min-width:90px;">1.5B+</div>
+        <div><div style="font-size:0.85rem;color:var(--text-bright);font-weight:600;">km of vehicle collected data</div><div style="font-size:0.75rem;color:var(--text-dim);margin-top:2px;">超过15亿公里车辆采集数据</div></div>
+      </div>
+      <div class="card" style="display:flex;align-items:center;gap:1.2rem;padding:1.2rem 1.5rem;">
+        <div style="font-family:var(--font-mono);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:var(--cyan);line-height:1;min-width:90px;">10B+</div>
+        <div><div style="font-size:0.85rem;color:var(--text-bright);font-weight:600;">frames of training data</div><div style="font-size:0.75rem;color:var(--text-dim);margin-top:2px;">超过100亿帧训练数据</div></div>
+      </div>
+      <div class="card" style="display:flex;align-items:center;gap:1.2rem;padding:1.2rem 1.5rem;">
+        <div style="font-family:var(--font-mono);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:var(--amber);line-height:1;min-width:90px;">200+</div>
+        <div><div style="font-size:0.85rem;color:var(--text-bright);font-weight:600;">triggers, 15-45s clips</div><div style="font-size:0.75rem;color:var(--text-dim);margin-top:2px;">200+种触发器采集片段</div></div>
+      </div>
+      <div class="card" style="display:flex;align-items:center;gap:1.2rem;padding:1.2rem 1.5rem;">
+        <div style="font-family:var(--font-mono);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:var(--amber);line-height:1;min-width:90px;">1min</div>
+        <div><div style="font-size:0.85rem;color:var(--text-bright);font-weight:600;">data feedback</div><div style="font-size:0.75rem;color:var(--text-dim);margin-top:2px;">1分钟数据反馈速度</div></div>
+      </div>
     </div>
   </div>
 
