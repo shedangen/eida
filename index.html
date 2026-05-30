@@ -1603,6 +1603,9 @@ body::after {
         this.vx += (dx / dist) * force;
         this.vy += (dy / dist) * force;
       }
+      // Random drift
+      this.vx += (Math.random() - 0.5) * 0.04;
+      this.vy += (Math.random() - 0.5) * 0.04;
       this.vx *= 0.98;
       this.vy *= 0.98;
       this.x += this.vx;
