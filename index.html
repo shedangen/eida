@@ -1310,7 +1310,7 @@ body::after {
         <div class="mission-row-label">战略目标</div>
         <div class="mission-row-value">
           分解三大核心目标：<br>
-          <strong style="color:var(--cyan)">【商业】</strong>实现市场份额和财务回报达到全球第一<br>
+          <strong style="color:var(--cyan)">【商业】</strong>产品市场份额和销售收入达到全球第一<br>
           <strong style="color:var(--cyan)">【产品】</strong>高质量数据集产品总规模达到上亿小时<br>
           <strong style="color:var(--cyan)">【技术】</strong>引领全球最先进的数据驱动新技术范式
         </div>
@@ -1396,14 +1396,14 @@ body::after {
     <table class="biz-table">
       <thead>
         <tr>
-          <th rowspan="2" style="min-width:60px;">区域/<br>客户分类</th>
+          <th rowspan="2" style="min-width:60px;">区域/<br>分类</th>
           <th colspan="3" class="region-cn">国内</th>
           <th class="region-ov">海外</th>
         </tr>
         <tr>
           <th>2B</th>
-          <th>2A</th>
           <th>2G</th>
+          <th>2A</th>
           <th class="sub-ov">2B/2A</th>
         </tr>
       </thead>
@@ -1416,17 +1416,16 @@ body::after {
             <div class="biz-cell-item"><strong>方案集成：</strong>帮场景方落地全套机器人服务；场景数采，联合模型后训练</div>
           </td>
           <td>
-            <div class="biz-cell-item"><strong>硬件销售：</strong>类似2B硬件销售，但价格策略可能灵活</div>
-            <div class="biz-cell-item"><strong>数据交易：</strong>类似2B数据交易，但规模预估较小</div>
+            <div class="biz-cell-item"><strong>方案总包：</strong>项目制，接数采总包订单，项目产出数据集，所有权归政府；项目竞标，中标后交付项目获得收入</div>
+            <div class="biz-cell-item"><strong>硬件销售：</strong>同2B模式；一般不回购数据</div>
           </td>
           <td>
-            <div class="biz-cell-item"><strong>方案总包：</strong>项目制方式，接总包订单，开展数据采集项目，硬件多样异构，数据统一接入我方平台，处理加工后产出数据集，所有权归政府</div>
-            <div class="biz-cell-item"><strong>硬件销售：</strong>不做总包，只给政府卖数采设备</div>
-            <div class="biz-cell-item"><strong>数据采购：</strong>可选向政府采购数据集，或帮助政府分销数据集获得分成</div>
+            <div class="biz-cell-item"><strong>硬件销售：</strong>类似2B硬件销售；价格策略更灵活</div>
+            <div class="biz-cell-item"><strong>数据交易：</strong>同2B；按需，预估规模较小</div>
           </td>
           <td>
-            <div class="biz-cell-item"><strong class="ov">总体模式：</strong>考虑数据合规，海外数据生产和销售均发生在海外，采用自产自销的模式</div>
-            <div class="biz-cell-item"><strong class="ov">数据交易：</strong>模式和策略和国内相同，但整体产品定价高于国内，主要考虑海外人力成本更高且客户支付能力更强</div>
+            <div class="biz-cell-item"><strong class="ov">数据交易：</strong>考虑全球各国家在数据隐私和安全合规的限制，面向海外交易的数据生产和销售均发生在海外，采用自产自销的模式</div>
+            <div class="biz-cell-item"><strong class="ov">定价策略：</strong>采用和国内类似的数据集定价策略，但整体产品定价高于国内，主要考虑海外人力成本更高且客户支付能力更强</div>
           </td>
         </tr>
         <tr>
@@ -1436,15 +1435,14 @@ body::after {
             <div class="biz-cell-item"><strong>合作场景：</strong>主动挑选，签订长期框架协议；按照采集数据量做价采购</div>
           </td>
           <td>
+            <div class="biz-cell-item"><strong>数据采购：</strong>向政府采购数据集，或者帮助政府分销数据集获得分成；看数据质量情况，可选进行采购</div>
+          </td>
+          <td>
             <div class="biz-cell-item"><strong>联合实验室：</strong>共同开展课题研究，论文成果共有；公司提供预算支持</div>
           </td>
           <td>
-            <div class="biz-cell-item"><strong>硬件销售：</strong>不做总包，只给政府卖数采设备，销售方案同2B模式</div>
-            <div class="biz-cell-item"><strong>数据采购：</strong>可选向政府采购数据集，或者帮助政府分销数据集获得分成</div>
-          </td>
-          <td>
-            <div class="biz-cell-item"><strong class="ov">硬件：</strong>复用一套采集硬件，硬件生产在国内，运输海外使用，海外硬件成本增加软件适配、运输和售后相关费用</div>
-            <div class="biz-cell-item"><strong class="ov">技术：</strong>复用一套数据处理技术平台，可支持在海外独立部署和运营，国内支持平台持续升级</div>
+            <div class="biz-cell-item"><strong class="ov">硬件：</strong>复用一套采集硬件；国内生产，运输海外使用</div>
+            <div class="biz-cell-item"><strong class="ov">技术：</strong>复用国内数据技术平台；支持海外独立部署和运营</div>
           </td>
         </tr>
       </tbody>
@@ -1465,10 +1463,9 @@ body::after {
       <div class="rm-milestone">PMF</div>
       <div class="rm-details">
         <dl>
-          <dt>产品</dt><dd>基于X硬件打通全流程 &middot; 发布数据集产品 &middot; 聚焦家庭场景</dd>
-          <dt>客户</dt><dd>标杆客户X</dd>
-          <dt>订单</dt><dd class="highlight">1亿</dd>
-          <dt>费用</dt><dd>5000万</dd>
+          <dt>产品</dt><dd>基于X硬件打通全流程 &middot; 发布100万小时数据集 &middot; 聚焦家庭场景</dd>
+          <dt>客户</dt><dd>标杆客户X &middot; 订单 <span class="highlight">1亿</span></dd>
+          <dt>成本</dt><dd>总成本5000万（人力3500万 + 业务1500万）</dd>
           <dt>团队</dt><dd class="highlight">50人</dd>
         </dl>
       </div>
@@ -1479,11 +1476,9 @@ body::after {
       <div class="rm-milestone">Scale</div>
       <div class="rm-details">
         <dl>
-          <dt>产品</dt><dd>发布自研数采硬件 &middot; 数据集总量百万小时 &middot; 拓展多场景</dd>
-          <dt>客户</dt><dd>3-5家</dd>
-          <dt>订单</dt><dd class="highlight">5亿</dd>
-          <dt>收入</dt><dd>2-3亿</dd>
-          <dt>费用</dt><dd>2亿</dd>
+          <dt>产品</dt><dd>发布自研数采硬件 &middot; 数据集达500万小时 &middot; 拓展场景（客户驱动）</dd>
+          <dt>客户</dt><dd>3-5家 &middot; 订单 <span class="highlight">5亿</span></dd>
+          <dt>财务</dt><dd>总收入2亿 &middot; 总成本3亿（人力:业务=1:1）</dd>
           <dt>团队</dt><dd class="highlight">150人</dd>
         </dl>
       </div>
@@ -1494,11 +1489,9 @@ body::after {
       <div class="rm-milestone">Breakeven</div>
       <div class="rm-details">
         <dl>
-          <dt>产品</dt><dd>发布换代数采硬件 &middot; 数据集总量千万小时 &middot; 覆盖多数场景</dd>
-          <dt>客户</dt><dd>20家以上</dd>
-          <dt>订单</dt><dd class="amber-highlight">50亿</dd>
-          <dt>收入</dt><dd>15亿</dd>
-          <dt>利润</dt><dd class="amber-highlight">1亿</dd>
+          <dt>产品</dt><dd>发布换代数采硬件 &middot; 数据集总量超1000万小时 &middot; 覆盖多场景（主动规划）</dd>
+          <dt>客户</dt><dd>20家以上 &middot; 订单 <span class="amber-highlight">50亿</span></dd>
+          <dt>财务</dt><dd>总收入15亿 &middot; 总成本14亿 &middot; 利润 <span class="amber-highlight">1亿</span></dd>
           <dt>团队</dt><dd class="amber-highlight">300人</dd>
         </dl>
       </div>
@@ -1509,11 +1502,9 @@ body::after {
       <div class="rm-milestone">Profit</div>
       <div class="rm-details">
         <dl>
-          <dt>产品</dt><dd>达成全球数据规模第一 &middot; 数据集总量上亿小时 &middot; 基本覆盖全场景</dd>
-          <dt>客户</dt><dd>50家以上</dd>
-          <dt>订单</dt><dd class="amber-highlight">100亿</dd>
-          <dt>收入</dt><dd class="amber-highlight">100亿</dd>
-          <dt>利润</dt><dd class="amber-highlight">35亿 (Rate 35%)</dd>
+          <dt>产品</dt><dd>达成产品市场份额第一 &middot; 数据集总量超1亿小时 &middot; 基本覆盖全场景</dd>
+          <dt>客户</dt><dd>50家以上 &middot; 订单 <span class="amber-highlight">100亿</span></dd>
+          <dt>财务</dt><dd>总收入100亿 &middot; 净利润 <span class="amber-highlight">35亿</span> &middot; 净利率 <span class="amber-highlight">35%</span></dd>
           <dt>团队</dt><dd class="amber-highlight">500人</dd>
         </dl>
       </div>
