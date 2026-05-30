@@ -609,6 +609,8 @@ body::after {
 }
 @media(max-width:768px) {
   .player-cards { grid-template-columns: 1fr; }
+  .phase-cards { grid-template-columns: 1fr !important; }
+  .metrics-bar { grid-template-columns: 1fr 1fr !important; }
 }
 
 /* ===== Mission Block ===== */
@@ -1203,8 +1205,48 @@ body::after {
   <div class="section-label reveal">02 // Experience</div>
   <h2 class="section-title reveal">数据闭环是自动驾驶快速突破的本质驱动力</h2>
 
+  <div class="phase-cards reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2.5rem;">
+    <div class="card" style="position:relative;overflow:hidden;padding:1.5rem;">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--cyan);"></div>
+      <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--cyan);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.6rem;">Phase 01</div>
+      <h4 style="font-size:1.05rem;font-weight:700;color:var(--text-bright);margin-bottom:0.5rem;">E2E + VLM</h4>
+      <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.7;">导航 <span style="color:var(--cyan);">&rarr;</span> One Model <span style="color:var(--cyan);">&rarr;</span> 轨迹<br>传感器 <span style="color:var(--cyan);">&rarr;</span> VLM</div>
+    </div>
+    <div class="card" style="position:relative;overflow:hidden;padding:1.5rem;">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--amber));"></div>
+      <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.6rem;">Phase 02</div>
+      <h4 style="font-size:1.05rem;font-weight:700;color:var(--text-bright);margin-bottom:0.5rem;">VLA</h4>
+      <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.7;">导航 + 传感器 <span style="color:var(--amber);">&rarr;</span> VLA <span style="color:var(--amber);">&rarr;</span> 轨迹</div>
+    </div>
+    <div class="card" style="position:relative;overflow:hidden;padding:1.5rem;">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--amber);"></div>
+      <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:0.6rem;">Phase 03</div>
+      <h4 style="font-size:1.05rem;font-weight:700;color:var(--text-bright);margin-bottom:0.5rem;">World Model</h4>
+      <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.7;">世界模型驱动<br>物理世界建模与预测</div>
+    </div>
+  </div>
+
   <div class="slide-original reveal">
     <img src="images/page-03-cropped.png" alt="数据闭环架构图">
+  </div>
+
+  <div class="metrics-bar reveal" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-top:2.5rem;">
+    <div style="background:var(--bg-card);padding:1.5rem;text-align:center;">
+      <div style="font-family:var(--font-mono);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:var(--cyan);line-height:1;margin-bottom:0.4rem;">1.5B+</div>
+      <div style="font-size:0.75rem;color:var(--text-dim);">km 车辆采集数据</div>
+    </div>
+    <div style="background:var(--bg-card);padding:1.5rem;text-align:center;">
+      <div style="font-family:var(--font-mono);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:var(--cyan);line-height:1;margin-bottom:0.4rem;">10B+</div>
+      <div style="font-size:0.75rem;color:var(--text-dim);">frames 训练数据</div>
+    </div>
+    <div style="background:var(--bg-card);padding:1.5rem;text-align:center;">
+      <div style="font-family:var(--font-mono);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:var(--amber);line-height:1;margin-bottom:0.4rem;">200+</div>
+      <div style="font-size:0.75rem;color:var(--text-dim);">triggers 15-45s clips</div>
+    </div>
+    <div style="background:var(--bg-card);padding:1.5rem;text-align:center;">
+      <div style="font-family:var(--font-mono);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:var(--amber);line-height:1;margin-bottom:0.4rem;">1min</div>
+      <div style="font-size:0.75rem;color:var(--text-dim);">数据反馈速度</div>
+    </div>
   </div>
 
 </section>
