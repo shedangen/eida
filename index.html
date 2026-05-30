@@ -612,6 +612,7 @@ body::after {
   .closeloop-row { grid-template-columns: 1fr !important; }
   .strategy-layout { grid-template-columns: 1fr !important; }
   .sys-flow-bar { flex-direction: column; }
+  #products .reveal[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
 }
 
 /* ===== Mission Block ===== */
@@ -1130,16 +1131,17 @@ body::after {
 <nav class="top-nav" id="topNav">
   <a href="#hero" class="nav-logo">EI.DATA</a>
   <ul class="nav-links" id="navLinks">
-    <li><a href="#about">AboutMe</a></li>
-    <li><a href="#dataloop">Experience</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#dataloop">Track</a></li>
     <li><a href="#value">Market</a></li>
     <li><a href="#players">Landscape</a></li>
     <li><a href="#positioning">Position</a></li>
     <li><a href="#strategy">Strategy</a></li>
+    <li><a href="#products">Products</a></li>
     <li><a href="#sysarch">System</a></li>
-    <li><a href="#team">Team</a></li>
     <li><a href="#business">Business</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#team">Team</a></li>
   </ul>
 </nav>
 
@@ -1162,7 +1164,7 @@ body::after {
 <section class="site-section" id="about">
   <div class="section-label reveal">01 // About Me</div>
   <h2 class="section-title reveal">About Me</h2>
-  <div class="about-intro reveal">一个专注数据、信仰AI的技术型产品业务负责人</div>
+  <div class="about-intro reveal">一个信仰AI、专注AI数据的行业资深技术专家、业务一号位</div>
   <div class="about-grid">
     <div class="reveal">
       <div class="photo-card">
@@ -1174,15 +1176,15 @@ body::after {
       <div class="timeline-exp">
         <div class="timeline-exp-item reveal">
           <div class="company">理想汽车 (2024-2026)</div>
-          <div class="desc">自动驾驶数据闭环负责人，支撑理想两代基于AI大模型的智驾系统量产上车</div>
+          <div class="desc">理想自动驾驶数据闭环负责人，支撑理想两代基于AI大模型的智驾系统量产上车</div>
         </div>
         <div class="timeline-exp-item reveal reveal-delay-1">
           <div class="company">百度 (2009-2023)</div>
-          <div class="desc">智驾地图业务总经理，将高精地图数据在基于规则的智驾时代大规模商业化</div>
+          <div class="desc">百度智能驾驶数据业务总经理，将高精地图的智驾时代大规模落地</div>
         </div>
         <div class="timeline-exp-item reveal reveal-delay-2">
-          <div class="company">灵图 (2007-2009)</div>
-          <div class="desc">算法工程师，基于地图数据建模及图论算法实现A到B的路线规划引擎服务</div>
+          <div class="company">凯立德 (2007-2009)</div>
+          <div class="desc">算法工程师，地图数据模板及算法实现</div>
         </div>
       </div>
       <div class="section-label reveal" style="margin-bottom:1.5rem">Education</div>
@@ -1204,9 +1206,9 @@ body::after {
 <div class="divider"><div class="divider-inner"></div></div>
 <section class="site-section" id="dataloop">
   <div class="section-label reveal">02 // Experience</div>
-  <h2 class="section-title reveal">数据闭环是自动驾驶快速突破的本质驱动力</h2>
+  <h2 class="section-title reveal">主要成就：完整经历并打造自动驾驶的数据基础设施</h2>
 
-  <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--cyan-dim);letter-spacing:3px;text-transform:uppercase;margin-bottom:1rem;" class="reveal">理想自动驾驶演进路线</div>
+  <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--cyan-dim);letter-spacing:3px;text-transform:uppercase;margin-bottom:1rem;" class="reveal">自动驾驶演进路线</div>
   <div class="reveal" style="margin-bottom:2.5rem;border-radius:6px;overflow:hidden;background:#1a1e28;border:1px solid var(--border);padding:1.2rem;">
     <img src="images/phases.png" alt="自动驾驶演进路线：E2E+VLM → VLA → World Model" style="width:100%;height:auto;display:block;filter:invert(0.85) hue-rotate(180deg) brightness(1.3) contrast(0.9);mix-blend-mode:screen;">
   </div>
@@ -1241,13 +1243,21 @@ body::after {
 <div class="divider"><div class="divider-inner"></div></div>
 <section class="site-section" id="value">
   <div class="section-label reveal">03 // Market Value</div>
-  <h2 class="section-title reveal">具身智能时代到来，具身数据将更具价值</h2>
+  <h2 class="section-title reveal">物理AI的具身智能时代已到来，具身数据将更具价值</h2>
   <div class="card reveal" style="overflow-x:auto; padding:0;">
     <table class="comp-table">
       <thead>
-        <tr><th>AI时代</th><th>模型</th><th>场景</th><th>数据</th><th>价值和机会</th></tr>
+        <tr><th colspan="2">AI时代</th><th>模型</th><th>场景</th><th>数据</th><th>价值和机会</th></tr>
       </thead>
       <tbody>
+        <tr>
+          <td rowspan="2" style="vertical-align:middle;text-align:center;font-weight:600;color:var(--cyan);font-size:0.85rem;border-right:1px solid var(--border);white-space:nowrap;">数字<br>AI</td>
+          <td><strong style="color:var(--cyan)">大语言模型</strong></td>
+          <td>技术路线基本收敛</td>
+          <td>场景多，LLM、代码及垂类场景</td>
+          <td>来源：来自互联网，数据开放<br>内容：文本、图像、视频多模态<br>规模：超过万亿tokens</td>
+          <td>通过深挖垂类数据提供价值<br>市值数百亿美金<br><span style="color:var(--text-dim)">代表公司Scale AI、Surge AI等</span></td>
+        </tr>
         <tr>
           <td><strong style="color:var(--cyan)">自动驾驶</strong></td>
           <td>技术路线收敛</td>
@@ -1255,14 +1265,8 @@ body::after {
           <td>来源：主机厂主导，数据封闭<br>内容：视觉、点云等少量模态<br>规模：等效约100万小时clips</td>
           <td>数据公司沦为低端外包标注<br>市值百亿人民币级<br><span style="color:var(--text-dim)">代表公司数据堂、奥鹏、曼孚等</span></td>
         </tr>
-        <tr>
-          <td><strong style="color:var(--cyan)">大语言模型</strong></td>
-          <td>技术路线基本收敛</td>
-          <td>场景多，LLM和代码成熟，还有垂类场景</td>
-          <td>来源：来自互联网，数据开放<br>内容：文本、图像、视频多模态<br>规模：超过万亿tokens</td>
-          <td>通过深挖垂类数据提供价值<br>市值数百亿美金<br><span style="color:var(--text-dim)">代表公司Scale AI、Surge AI等</span></td>
-        </tr>
         <tr class="amber-row">
+          <td style="vertical-align:middle;text-align:center;font-weight:600;color:var(--amber);font-size:0.85rem;border-right:1px solid var(--border);white-space:nowrap;">物理<br>AI</td>
           <td><strong style="color:var(--amber)">具身智能</strong></td>
           <td><span style="color:#f87171;font-weight:600">技术路线还未收敛</span></td>
           <td>场景众多，极度分散，服务千行百业</td>
@@ -1279,40 +1283,45 @@ body::after {
 <section class="site-section" id="players">
   <div class="section-label reveal">04 // Competitive Landscape</div>
   <h2 class="section-title reveal">当前行业玩家主要分三类，场景切入派是主要对标</h2>
-  <div class="player-cards">
-    <div class="player-card reveal">
-      <div class="player-card-type">独立数据公司</div>
-      <h4>光轮智能 / 鹿明机器人 / 简智机器人</h4>
-      <ul class="traits">
-        <li><strong style="color:var(--text-bright)">光轮智能：</strong>合成数据投入早，有一定规模；国际客户订单</li>
-        <li><strong style="color:var(--text-bright)">鹿明机器人：</strong>核心投入在硬件迭代；卖设备+服务</li>
-        <li><strong style="color:var(--text-bright)">简智机器人：</strong>具备一定可迁移数据治理能力；工程化落地能力更强</li>
-      </ul>
-      <div class="clients"><strong>Clients:</strong> NVIDIA、Generalsit等；硬件为主，卖给数采厂；蚂蚁灵波、小米</div>
-      <div class="weakness">创业公司还比较小，资源受限，数据难以快速scaling</div>
-    </div>
-    <div class="player-card reveal reveal-delay-1">
-      <div class="player-card-type">模型切入</div>
-      <h4>觅蜂科技</h4>
-      <ul class="traits">
-        <li>和模型绑定，快速闭环验证</li>
-        <li>早期资源比较多</li>
-      </ul>
-      <div class="clients"><strong>Clients:</strong> 智元、字节、海外大厂</div>
-      <div class="weakness">模型公司孵化，不中立</div>
-    </div>
-    <div class="player-card featured reveal reveal-delay-2">
-      <div class="player-card-type">场景切入</div>
-      <h4>京东云</h4>
-      <ul class="traits">
-        <li>场景-数据-模型-本体全链路布局</li>
-        <li>数采厂大手笔投入</li>
-        <li>线下能力强</li>
-        <li>平台型打法</li>
-      </ul>
-      <div class="clients"><strong>Clients:</strong> 众擎、智元、千寻等（主要是被投公司）</div>
-      <div class="weakness">自研模型和本体参与市场，不够中立</div>
-    </div>
+  <div class="card reveal" style="overflow-x:auto; padding:0;">
+    <table class="comp-table">
+      <thead>
+        <tr><th>分类</th><th>代表玩家</th><th>特点</th><th>主要客户</th><th>劣势</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="3" style="vertical-align:middle;text-align:center;font-weight:600;color:var(--cyan);border-right:1px solid var(--border);white-space:nowrap;">独立数据<br>公司</td>
+          <td><strong style="color:var(--text-bright)">光轮智能</strong></td>
+          <td>合成数据投入早，有一定规模<br>国际客户订单</td>
+          <td>NVIDIA、Generalsit等</td>
+          <td rowspan="3" style="vertical-align:middle;color:#f87171;">创业公司还比较小，数据难以快速scaling</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--text-bright)">鹿明机器人</strong></td>
+          <td>核心投入在硬件迭代<br>卖设备+服务</td>
+          <td>硬件为主，卖给数采厂</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--text-bright)">简智机器人</strong></td>
+          <td>具备一定可迁移数据治理能力<br>工程化落地能力更强</td>
+          <td>蚂蚁灵波、小米</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;font-weight:600;color:var(--cyan);border-right:1px solid var(--border);white-space:nowrap;">模型切入</td>
+          <td><strong style="color:var(--text-bright)">觅蜂科技</strong></td>
+          <td>和模型绑定，快速闭环验证<br>早期资源比较多</td>
+          <td>智元、字节、海外大厂</td>
+          <td style="color:#f87171;">模型公司孵化，不中立</td>
+        </tr>
+        <tr class="amber-row">
+          <td style="text-align:center;font-weight:600;color:var(--amber);border-right:1px solid var(--border);white-space:nowrap;">场景切入</td>
+          <td><strong style="color:var(--amber)">京东云</strong></td>
+          <td>场景-数据-模型-本体全链路布局，数采厂大手笔投入<br>线下能力强<br>平台型打法</td>
+          <td>众擎、智元、千寻等<br>（主要是被投公司）</td>
+          <td style="color:#f87171;">自研模型和本体参与市场，不够中立</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </section>
 
@@ -1368,22 +1377,51 @@ body::after {
         <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--cyan),var(--amber));"></div>
         <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--amber);letter-spacing:2px;margin-bottom:0.4rem;">DATA</div>
         <h4 style="font-size:0.95rem;color:var(--text-bright);margin-bottom:0.4rem;">数据（自建新团队）</h4>
-        <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.7;">数据采集 &middot; 数据合成 &middot; 数据处理<br>硬件终端 / 云端大模型 / 世界模型</div>
+        <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.7;">数据采集 &middot; 数据合成 &middot; 数据处理 &middot; 模型训练 &middot; 仿真评测<br>数据采集硬件终端 / 数据处理云端大模型 / 仿真与合成世界模型</div>
       </div>
       <div class="card" style="position:relative;overflow:hidden;padding:1.2rem 1.5rem;">
         <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--amber);"></div>
         <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--amber);letter-spacing:2px;margin-bottom:0.4rem;">MODEL</div>
         <h4 style="font-size:0.95rem;color:var(--text-bright);margin-bottom:0.4rem;">模型（被投X公司）</h4>
-        <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.7;">模型评测体系定义 &middot; 研发迭代与管理<br>World Modeling / Action FineTuning / Physical RL</div>
+        <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.7;">模型评测体系定义 &middot; 研发迭代与管理<br>需求 / 交付 / 部署 / 验证</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ==================== 07 SYSTEM ARCHITECTURE ==================== -->
+<!-- ==================== 07 PRODUCTS ==================== -->
+<div class="divider"><div class="divider-inner"></div></div>
+<section class="site-section" id="products">
+  <div class="section-label reveal">07 // Products</div>
+  <h2 class="section-title reveal">产品方案</h2>
+
+  <div class="slide-original reveal" style="background:#f0f2f6;">
+    <img src="images/products.png" alt="产品方案：数采硬件、数据集、解决方案" style="filter:invert(0.85) hue-rotate(180deg) brightness(1.2) contrast(0.9);mix-blend-mode:screen;">
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2rem;" class="reveal">
+    <div class="card" style="text-align:center;padding:1.5rem;">
+      <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--cyan);letter-spacing:2px;margin-bottom:0.8rem;">HARDWARE</div>
+      <h4 style="font-size:1rem;color:var(--text-bright);margin-bottom:0.8rem;">数采硬件</h4>
+      <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.8;">Human Centric 设计理念<br>Ego &middot; UMI/手套 &middot; 全身动捕<br>肌电手环 &middot; 定位传感器 &middot; 皮肤传感器 &middot; RGB</div>
+    </div>
+    <div class="card" style="text-align:center;padding:1.5rem;">
+      <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--cyan);letter-spacing:2px;margin-bottom:0.8rem;">DATASETS</div>
+      <h4 style="font-size:1rem;color:var(--text-bright);margin-bottom:0.8rem;">数据集</h4>
+      <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.8;">真机遥操数据<br>操作/动作数据<br>Ego视觉数据</div>
+    </div>
+    <div class="card" style="text-align:center;padding:1.5rem;">
+      <div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--amber);letter-spacing:2px;margin-bottom:0.8rem;">SOLUTIONS</div>
+      <h4 style="font-size:1rem;color:var(--text-bright);margin-bottom:0.8rem;">解决方案</h4>
+      <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.8;">场景为核心<br>数据 &middot; 模型 &middot; 本体<br>全链路整合</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 08 SYSTEM ARCHITECTURE ==================== -->
 <div class="divider"><div class="divider-inner"></div></div>
 <section class="site-section" id="sysarch">
-  <div class="section-label reveal">07 // System Architecture</div>
+  <div class="section-label reveal">08 // System Architecture</div>
   <h2 class="section-title reveal">系统架构</h2>
 
   <div class="slide-original reveal">
@@ -1419,48 +1457,6 @@ body::after {
       <h4 style="font-size:0.88rem;color:var(--text-bright);margin-bottom:0.4rem;">Real应用</h4>
       <div style="font-size:0.72rem;color:var(--text-dim);line-height:1.6;">部署上线 &middot; 效果监控<br>反馈回流 &middot; 持续优化</div>
     </div>
-  </div>
-</section>
-
-<!-- ==================== 08 TEAM ==================== -->
-<div class="divider"><div class="divider-inner"></div></div>
-<section class="site-section" id="team">
-  <div class="section-label reveal">08 // Team</div>
-  <h2 class="section-title reveal">团队配置</h2>
-
-  <div class="org-chart reveal" style="margin-bottom:2.5rem;padding:2rem;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;">
-    <div style="display:flex;justify-content:center;gap:1.5rem;margin-bottom:1.2rem;">
-      <div style="padding:14px 40px;background:linear-gradient(135deg,rgba(0,229,255,0.25),rgba(0,229,255,0.1));border:1px solid var(--cyan);border-radius:4px;font-family:var(--font-mono);font-weight:700;color:var(--cyan);font-size:1.1rem;letter-spacing:3px;box-shadow:0 0 24px var(--cyan-glow);">Head</div>
-      <div style="padding:14px 30px;background:rgba(0,229,255,0.04);border:1px solid var(--border-bright);border-radius:4px;font-family:var(--font-mono);font-weight:600;color:var(--text);font-size:0.9rem;letter-spacing:2px;">首席科学家</div>
-    </div>
-    <div style="width:2px;height:24px;background:linear-gradient(to bottom,var(--cyan),var(--border));margin:0 auto;"></div>
-    <div style="display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;margin-top:0.5rem;">
-      <div style="padding:10px 22px;background:rgba(0,229,255,0.06);border:1px solid var(--border-bright);border-radius:4px;font-family:var(--font-mono);font-size:0.85rem;color:var(--cyan);font-weight:500;letter-spacing:2px;">预研</div>
-      <div style="padding:10px 22px;background:rgba(0,229,255,0.06);border:1px solid var(--border-bright);border-radius:4px;font-family:var(--font-mono);font-size:0.85rem;color:var(--cyan);font-weight:500;letter-spacing:2px;">算法</div>
-      <div style="padding:10px 22px;background:rgba(0,229,255,0.06);border:1px solid var(--border-bright);border-radius:4px;font-family:var(--font-mono);font-size:0.85rem;color:var(--cyan);font-weight:500;letter-spacing:2px;">工程</div>
-      <div style="padding:10px 22px;background:rgba(0,229,255,0.06);border:1px solid var(--border-bright);border-radius:4px;font-family:var(--font-mono);font-size:0.85rem;color:var(--cyan);font-weight:500;letter-spacing:2px;">硬件</div>
-      <div style="padding:10px 22px;background:rgba(0,229,255,0.06);border:1px solid var(--border-bright);border-radius:4px;font-family:var(--font-mono);font-size:0.85rem;color:var(--cyan);font-weight:500;letter-spacing:2px;">产品</div>
-      <div style="padding:10px 22px;background:rgba(0,229,255,0.06);border:1px solid var(--border-bright);border-radius:4px;font-family:var(--font-mono);font-size:0.85rem;color:var(--cyan);font-weight:500;letter-spacing:2px;">商务</div>
-      <div style="padding:10px 22px;background:rgba(0,229,255,0.06);border:1px solid var(--border-bright);border-radius:4px;font-family:var(--font-mono);font-size:0.85rem;color:var(--cyan);font-weight:500;letter-spacing:2px;">GR</div>
-    </div>
-  </div>
-
-  <div class="card reveal" style="overflow-x:auto; padding:0;">
-    <table class="team-table">
-      <thead>
-        <tr>
-          <th>年份</th><th>预研</th><th>算法</th><th>工程</th><th>硬件</th><th>产品</th><th>商务</th><th>GR</th><th>总计</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td class="year-col">7月启动</td><td>2</td><td>2</td><td>2</td><td>1</td><td>2</td><td>1</td><td>1</td><td class="total-col">10+</td></tr>
-        <tr><td class="year-col">2026</td><td>5</td><td>12</td><td>10</td><td>10</td><td>5</td><td>5</td><td>3</td><td class="total-col">50</td></tr>
-        <tr><td class="year-col">2027</td><td>10</td><td>30</td><td>30</td><td>30</td><td>20</td><td>20</td><td>10</td><td class="total-col">150</td></tr>
-        <tr><td class="year-col">2028</td><td>20</td><td>60</td><td>60</td><td>60</td><td>40</td><td>40</td><td>20</td><td class="total-col">300</td></tr>
-        <tr><td class="year-col">2029</td><td>30</td><td>80</td><td>80</td><td>80</td><td>50</td><td>60</td><td>20</td><td class="total-col">400</td></tr>
-        <tr><td class="year-col">2030</td><td>40</td><td>100</td><td>100</td><td>80</td><td>60</td><td>100</td><td>20</td><td class="total-col">500</td></tr>
-      </tbody>
-    </table>
   </div>
 </section>
 
@@ -1544,12 +1540,12 @@ body::after {
     <div class="rm-node">
       <div class="rm-dot"></div>
       <div class="rm-year">2026.12</div>
-      <div class="rm-milestone">PMF</div>
+      <div class="rm-milestone">验证PMF</div>
       <div class="rm-details">
         <dl>
-          <dt>产品</dt><dd>基于X硬件打通全流程 &middot; 发布<span class="highlight">100万小时</span>数据集 &middot; 聚焦家庭场景</dd>
-          <dt>客户</dt><dd>标杆客户 <span class="highlight">X</span> &middot; 订单1亿</dd>
-          <dt>成本</dt><dd>总成本5000万（人力3500万 + 业务1500万）</dd>
+          <dt>产品</dt><dd>交付X数据集<span class="highlight">100万小时</span> &middot; 发布开源数据集及论文 &middot; 聚焦家庭场景（/w X）</dd>
+          <dt>客户</dt><dd>标杆客户：<span class="highlight">X</span> &middot; 订单1亿</dd>
+          <dt>财务</dt><dd>收入：- &middot; 成本：5000万 &middot; 人力:业务 = 1:1</dd>
           <dt>团队</dt><dd>50人</dd>
         </dl>
       </div>
@@ -1557,12 +1553,12 @@ body::after {
     <div class="rm-node">
       <div class="rm-dot"></div>
       <div class="rm-year">2027</div>
-      <div class="rm-milestone">Scale</div>
+      <div class="rm-milestone">客户拓展</div>
       <div class="rm-details">
         <dl>
-          <dt>产品</dt><dd>发布自研数采硬件 &middot; 数据集达<span class="highlight">500万小时</span> &middot; 拓展场景（客户驱动）</dd>
-          <dt>客户</dt><dd>3-5家 &middot; 订单5亿</dd>
-          <dt>财务</dt><dd>总收入<span class="highlight">2亿</span> &middot; 总成本3亿（人力:业务=1:1）</dd>
+          <dt>产品</dt><dd>发布自研数采硬件 &middot; 数据集<span class="highlight">500万小时</span> &middot; 拓展场景（客户驱动）</dd>
+          <dt>客户</dt><dd>客户：8-10家 &middot; 订单 <span class="highlight">10亿</span></dd>
+          <dt>财务</dt><dd>收入：1亿 &middot; 成本：5亿 &middot; 人力:业务 = 1:2</dd>
           <dt>团队</dt><dd>150人</dd>
         </dl>
       </div>
@@ -1570,12 +1566,12 @@ body::after {
     <div class="rm-node">
       <div class="rm-dot"></div>
       <div class="rm-year">2028</div>
-      <div class="rm-milestone">Breakeven</div>
+      <div class="rm-milestone">规模收入</div>
       <div class="rm-details">
         <dl>
-          <dt>产品</dt><dd>发布换代数采硬件 &middot; 数据集总量超<span class="amber-highlight">1000万小时</span> &middot; 覆盖多场景（主动规划）</dd>
-          <dt>客户</dt><dd>20家以上 &middot; 订单50亿</dd>
-          <dt>财务</dt><dd>总收入15亿 &middot; 总成本14亿 &middot; 利润 <span class="amber-highlight">1亿</span></dd>
+          <dt>产品</dt><dd>发布换代数采硬件 &middot; 数据集<span class="amber-highlight">1000万小时</span> &middot; 覆盖多场景（主动规划）</dd>
+          <dt>客户</dt><dd>客户：30-50家 &middot; 订单 <span class="amber-highlight">50亿</span></dd>
+          <dt>财务</dt><dd>收入：<span class="amber-highlight">10亿</span> &middot; 成本：12亿 &middot; 人力:业务 = 1:3</dd>
           <dt>团队</dt><dd>300人</dd>
         </dl>
       </div>
@@ -1583,16 +1579,58 @@ body::after {
     <div class="rm-node">
       <div class="rm-dot"></div>
       <div class="rm-year">2030</div>
-      <div class="rm-milestone">Profit</div>
+      <div class="rm-milestone">规模盈利</div>
       <div class="rm-details">
         <dl>
-          <dt>产品</dt><dd>达成产品市场份额第一 &middot; 数据集总量超<span class="amber-highlight">1亿小时</span> &middot; 基本覆盖全场景</dd>
-          <dt>客户</dt><dd>50家以上 &middot; 订单100亿</dd>
-          <dt>财务</dt><dd>总收入<span class="amber-highlight">100亿</span> &middot; 净利润35亿 &middot; 净利率 <span class="amber-highlight">35%</span></dd>
+          <dt>产品</dt><dd>产品市场份额第一 &middot; 数据集<span class="amber-highlight">1亿小时</span> &middot; 基本覆盖全场景</dd>
+          <dt>客户</dt><dd>客户：&gt;100家 &middot; 订单 <span class="amber-highlight">100亿</span></dd>
+          <dt>财务</dt><dd>收入：<span class="amber-highlight">100亿</span> &middot; 净利润：35亿 &middot; 净利率 <span class="amber-highlight">35%</span></dd>
           <dt>团队</dt><dd>500人</dd>
         </dl>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ==================== 11 TEAM ==================== -->
+<div class="divider"><div class="divider-inner"></div></div>
+<section class="site-section" id="team">
+  <div class="section-label reveal">11 // Team</div>
+  <h2 class="section-title reveal">团队配置</h2>
+
+  <div class="org-chart reveal" style="margin-bottom:2.5rem;padding:2rem;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;">
+    <div style="display:flex;justify-content:center;gap:1.5rem;margin-bottom:1.2rem;">
+      <div style="padding:14px 40px;background:linear-gradient(135deg,rgba(0,229,255,0.25),rgba(0,229,255,0.1));border:1px solid var(--cyan);border-radius:4px;font-family:var(--font-mono);font-weight:700;color:var(--cyan);font-size:1.1rem;letter-spacing:3px;box-shadow:0 0 24px var(--cyan-glow);">Head</div>
+      <div style="padding:14px 30px;background:rgba(0,229,255,0.04);border:1px solid var(--border-bright);border-radius:4px;font-family:var(--font-mono);font-weight:600;color:var(--text);font-size:0.9rem;letter-spacing:2px;">首席科学家</div>
+    </div>
+    <div style="width:2px;height:24px;background:linear-gradient(to bottom,var(--cyan),var(--border));margin:0 auto;"></div>
+    <div style="display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;margin-top:0.5rem;">
+      <div style="padding:10px 22px;background:rgba(0,229,255,0.06);border:1px solid var(--border-bright);border-radius:4px;font-family:var(--font-mono);font-size:0.85rem;color:var(--cyan);font-weight:500;letter-spacing:2px;">预研</div>
+      <div style="padding:10px 22px;background:rgba(0,229,255,0.06);border:1px solid var(--border-bright);border-radius:4px;font-family:var(--font-mono);font-size:0.85rem;color:var(--cyan);font-weight:500;letter-spacing:2px;">算法</div>
+      <div style="padding:10px 22px;background:rgba(0,229,255,0.06);border:1px solid var(--border-bright);border-radius:4px;font-family:var(--font-mono);font-size:0.85rem;color:var(--cyan);font-weight:500;letter-spacing:2px;">工程</div>
+      <div style="padding:10px 22px;background:rgba(0,229,255,0.06);border:1px solid var(--border-bright);border-radius:4px;font-family:var(--font-mono);font-size:0.85rem;color:var(--cyan);font-weight:500;letter-spacing:2px;">硬件</div>
+      <div style="padding:10px 22px;background:rgba(0,229,255,0.06);border:1px solid var(--border-bright);border-radius:4px;font-family:var(--font-mono);font-size:0.85rem;color:var(--cyan);font-weight:500;letter-spacing:2px;">产品</div>
+      <div style="padding:10px 22px;background:rgba(0,229,255,0.06);border:1px solid var(--border-bright);border-radius:4px;font-family:var(--font-mono);font-size:0.85rem;color:var(--cyan);font-weight:500;letter-spacing:2px;">商务</div>
+      <div style="padding:10px 22px;background:rgba(0,229,255,0.06);border:1px solid var(--border-bright);border-radius:4px;font-family:var(--font-mono);font-size:0.85rem;color:var(--cyan);font-weight:500;letter-spacing:2px;">GR</div>
+    </div>
+  </div>
+
+  <div class="card reveal" style="overflow-x:auto; padding:0;">
+    <table class="team-table">
+      <thead>
+        <tr>
+          <th>年份</th><th>预研</th><th>算法</th><th>工程</th><th>硬件</th><th>产品</th><th>商务</th><th>GR</th><th>总计</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="year-col">7月</td><td>2<br><span style="font-size:0.7rem;color:var(--text-dim)">史** 翟**</span></td><td>2<br><span style="font-size:0.7rem;color:var(--text-dim)">马** 徐*</span></td><td>2<br><span style="font-size:0.7rem;color:var(--text-dim)">吕** 吴**</span></td><td>1<br><span style="font-size:0.7rem;color:var(--text-dim)">雷**</span></td><td>2<br><span style="font-size:0.7rem;color:var(--text-dim)">杨** 田**</span></td><td>1<br><span style="font-size:0.7rem;color:var(--text-dim)">廖*</span></td><td>1<br><span style="font-size:0.7rem;color:var(--text-dim)">鄂**</span></td><td class="total-col">10+</td></tr>
+        <tr><td class="year-col">2026</td><td>5</td><td>12</td><td>10</td><td>10</td><td>5</td><td>5</td><td>3</td><td class="total-col">50</td></tr>
+        <tr><td class="year-col">2027</td><td>10</td><td>30</td><td>30</td><td>30</td><td>20</td><td>20</td><td>10</td><td class="total-col">150</td></tr>
+        <tr><td class="year-col">2028</td><td>20</td><td>60</td><td>60</td><td>60</td><td>40</td><td>40</td><td>20</td><td class="total-col">300</td></tr>
+        <tr><td class="year-col">2029</td><td>30</td><td>80</td><td>80</td><td>80</td><td>50</td><td>60</td><td>20</td><td class="total-col">400</td></tr>
+        <tr><td class="year-col">2030</td><td>40</td><td>100</td><td>100</td><td>80</td><td>60</td><td>100</td><td>20</td><td class="total-col">500</td></tr>
+      </tbody>
+    </table>
   </div>
 </section>
 
